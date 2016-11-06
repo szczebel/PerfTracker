@@ -15,6 +15,7 @@ import swingutils.components.ComponentFactory;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Consumer;
 
 @ComponentScan(basePackages = "perftracker")
 @Component
@@ -33,10 +34,13 @@ public class Main {
     private GUI gui;
     @Autowired
     private Factory domainFactory;
+    @Autowired
+    private Consumer<String> statusBar;
 
     @SuppressWarnings("unused")
     @PostConstruct
     void startup() {
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> statusBar.accept(e.getMessage()));
         gui.show();
         PerformanceTrackingSystem initial = domainFactory.createEmptySystem();
         persister.setCurrent(initial);

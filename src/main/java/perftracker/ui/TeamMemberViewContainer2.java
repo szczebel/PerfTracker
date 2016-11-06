@@ -4,32 +4,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import perftracker.domain.PerformanceTrackingSystem;
 import perftracker.domain.TeamMember;
+import swingutils.components.ComponentFactory;
 
 import javax.swing.*;
+import java.awt.*;
+
+import static swingutils.components.ComponentFactory.withGradientHeader;
 
 @Component
-class TeamMemberViewContainer {
+class TeamMemberViewContainer2 {
 
     @Autowired
     private TeamMemberViewBuilder teamMemberViewBuilder;
 
     private PerformanceTrackingSystem system;
-    private JTabbedPane tabsWithDetails = new JTabbedPane();
+    private JPanel panel = new JPanel(new BorderLayout());
 
     public JComponent getComponent() {
-        return tabsWithDetails;
+        return panel;
     }
 
     void resetWith(PerformanceTrackingSystem system) {
         this.system = system;
-        tabsWithDetails.removeAll();
+        panel.removeAll();
+        panel.revalidate();
     }
 
     void showDetails(TeamMember selection) {
-        int tabIndex = tabsWithDetails.indexOfTab(selection.getName());
-        if (tabIndex == -1)
-            tabsWithDetails.addTab(selection.getName(), teamMemberViewBuilder.build(selection, system));
-        tabsWithDetails.setSelectedIndex(tabsWithDetails.indexOfTab(selection.getName()));
-        //todo: closeable tabs
+        panel.removeAll();
+        panel.add(withGradientHeader(
+                teamMemberViewBuilder.build(selection, system),
+                "Details of " + selection.getName())
+        );
+        panel.revalidate();
     }
 }

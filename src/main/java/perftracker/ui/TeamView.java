@@ -3,7 +3,6 @@ package perftracker.ui;
 import ca.odell.glazedlists.EventList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import perftracker.domain.Criteria;
 import perftracker.domain.CriteriaType;
 import perftracker.domain.PerformanceTrackingSystem;
 import perftracker.domain.TeamMember;
@@ -13,16 +12,17 @@ import swingutils.components.table.TablePanel;
 import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
-
+import java.awt.*;
 import java.util.Map;
 import java.util.function.Predicate;
 
 import static perftracker.domain.CriteriaType.HARDSKILL;
 import static perftracker.domain.CriteriaType.SOFTSKILL;
 import static swingutils.EventListHelper.*;
-import static swingutils.components.ComponentFactory.button;
-import static swingutils.components.ComponentFactory.label;
-import static swingutils.layout.LayoutBuilders.*;
+import static swingutils.components.ComponentFactory.*;
+import static swingutils.layout.LayoutBuilders.borderLayout;
+import static swingutils.layout.LayoutBuilders.flowLayout;
+import static swingutils.layout.LayoutBuilders.gridLayout;
 
 @Component
 public class TeamView {
@@ -30,23 +30,22 @@ public class TeamView {
     @Autowired
     private Factory domainFactory;
     @Autowired
-    private TeamMemberViewContainer detailsContainer;
+    private TeamMemberViewContainer3 detailsContainer;
 
     private PerformanceTrackingSystem system;
     private EventList<Row> viewModel = eventList();
+
     JComponent build() {
         TablePanel<Row> tablePanel = createTeamTable();
         showDetailsOnSelectionChange(tablePanel);
 
-        return borderLayout()
-                .north(buildAddNewTeamMemberPanel())
-                .center(
-                        gridLayout(2, 1,
-                                tablePanel.getComponent(),
-                                detailsContainer.getComponent()
-                        )
-                )
-                .build();
+        return gridLayout(1, 2,
+                withGradientHeader(borderLayout()
+                        .south(buildAddNewTeamMemberPanel())
+                        .center(tablePanel.getComponent())
+                        .build(), "Team"),
+                decorate(detailsContainer.getComponent()).withEmptyBorder(0, 8, 0, 0).get()
+        );
     }
 
     private TablePanel<Row> createTeamTable() {
@@ -82,7 +81,7 @@ public class TeamView {
 
     private JComponent buildAddNewTeamMemberPanel() {
         JTextField textField = new JTextField(30);
-        return flowLayout(
+        return flowLayout(FlowLayout.CENTER,
                 label("Name of new team member:"),
                 textField,
                 button("Add", () -> system.addTeamMember(textField.getText().trim()))
@@ -91,11 +90,11 @@ public class TeamView {
 
     private void addTeamMemberToViewModel(TeamMember tm) {
         addToList(viewModel, new Row(tm));
-        tm.whenGradeChanged((s,i)->onGradeChanged(tm));
+        tm.whenGradeChanged((s, i) -> onGradeChanged(tm));
     }
 
     private void onGradeChanged(TeamMember tm) {
-        Row row = viewModel.stream().filter(r -> tm.getName().equals(r.getName())).findFirst().get();
+        Row row = viewModel.stream().filter(r -> tm.getName().equals(r.getName())).findFirst().orElseThrow(IllegalArgumentException::new);
         setInList(viewModel, viewModel.indexOf(row), row);
     }
 
@@ -124,11 +123,7 @@ public class TeamView {
         }
 
         private Predicate<Map.Entry<String, Integer>> by(CriteriaType type) {
-            return gradeEntry -> {
-                String criteriaName = gradeEntry.getKey();
-                Criteria criteria = system.getCriteria().stream().filter(c -> criteriaName.equals(c.getName())).findFirst().get();
-                return type == criteria.getType();
-            };
+            return gradeEntry -> type == system.findCriteria(gradeEntry.getKey()).getType();
         }
     }
 }

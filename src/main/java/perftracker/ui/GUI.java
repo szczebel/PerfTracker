@@ -44,19 +44,15 @@ public class GUI {
                 .menuBarCustomizer(menu -> decorate(menu).withEmptyBorder(8, 8, 8, 4).get());
 
         JComponent cards = cardLayout(cardMenuBuilder)
-                .addTab(TEAM, createDecoratedPanel(TEAM, teamView.build()))
+                .addTab(TEAM, decorate(teamView.build()).withEmptyBorder(8, 4, 8, 8).get())
                 .addTab(COMPARISON_GRAPH, createDecoratedPanel(COMPARISON_GRAPH, label("Not implemented yet")))//todo comparison graph
                 .addTab(CRITERIA, createDecoratedPanel(CRITERIA, criteriaView.build()))
                 .build();
 
         f.add(borderLayout()
+                .north(fileViewBuilder.build())
                 .center(cards)
-                .south(
-                        borderLayout()
-                                .center(statusBar.getComponent())
-                                .east(fileViewBuilder.build())
-                                .build()
-                )
+                .south(statusBar.getComponent())
                 .build());
         f.setVisible(true);
     }

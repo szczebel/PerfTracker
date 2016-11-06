@@ -13,6 +13,8 @@ import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
 
+import java.awt.*;
+
 import static swingutils.EventListHelper.clearEventList;
 import static swingutils.EventListHelper.eventList;
 import static swingutils.components.ComponentFactory.button;
@@ -41,8 +43,8 @@ public class CriteriaView {
                 );
         tablePanel.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         return borderLayout()
-                .north(buildAddNewCriterionPanel())
                 .center(tablePanel.getComponent())
+                .south(buildAddNewCriterionPanel())
                 .build();
     }
 
@@ -50,7 +52,7 @@ public class CriteriaView {
         JTextField textField = new JTextField(30);
         SpinnerNumberModel numberModel = new SpinnerNumberModel(10, 1, 100, 1);
         JComboBox<CriteriaType> typeSelector = new JComboBox<>(CriteriaType.values());
-        return flowLayout(
+        return flowLayout(FlowLayout.CENTER,
                 label("New criterion:"),
                 textField,
                 label("Type:"),

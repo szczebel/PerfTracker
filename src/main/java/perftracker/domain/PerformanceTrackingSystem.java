@@ -7,6 +7,8 @@ public interface PerformanceTrackingSystem {
 
     List<Criteria> getCriteria();
 
+    Criteria findCriteria(String criteriaName);
+
     List<TeamMember> getTeam();
 
     void addCriteria(Criteria newCriteria);
