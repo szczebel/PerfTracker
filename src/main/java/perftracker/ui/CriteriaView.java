@@ -14,7 +14,6 @@ import swingutils.components.table.descriptor.Columns;
 import javax.swing.*;
 
 import static swingutils.EventListHelper.clearEventList;
-import static swingutils.EventListHelper.doWithWriteLock;
 import static swingutils.EventListHelper.eventList;
 import static swingutils.components.ComponentFactory.button;
 import static swingutils.components.ComponentFactory.label;

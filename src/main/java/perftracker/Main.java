@@ -34,6 +34,7 @@ public class Main {
     @Autowired
     private Factory domainFactory;
 
+    @SuppressWarnings("unused")
     @PostConstruct
     void startup() {
         gui.show();

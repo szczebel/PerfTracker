@@ -3,7 +3,6 @@ package perftracker.persistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import perftracker.DirtyTracker;
-import perftracker.ui.StatusBar;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

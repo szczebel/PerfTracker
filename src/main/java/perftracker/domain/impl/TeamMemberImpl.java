@@ -9,6 +9,7 @@ class TeamMemberImpl implements TeamMember {
     private String name;
     private Map<String, Integer> grades = new HashMap<>();
 
+    @SuppressWarnings("unused")
     TeamMemberImpl() {}
 
     TeamMemberImpl(String key) {
