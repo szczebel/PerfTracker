@@ -32,6 +32,7 @@ public class GUI {
 
     public void show() {
         RichFrame f = new RichFrame();
+        f.setIconImage(new ImageIcon((getClass().getResource("/icon.png"))).getImage());
         f.setTitle("Performance Tracker");
         f.setExtendedState(Frame.MAXIMIZED_BOTH);
         f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
