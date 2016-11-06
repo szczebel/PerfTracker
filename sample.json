@@ -1,0 +1,124 @@
+{
+  "criteria": [
+    {
+      "name": "Being nice to strangers",
+      "type": "SOFTSKILL",
+      "maxGrade": 10
+    },
+    {
+      "name": "Walking elderly through the street",
+      "type": "SOFTSKILL",
+      "maxGrade": 10
+    },
+    {
+      "name": "Brushing teeth",
+      "type": "SOFTSKILL",
+      "maxGrade": 10
+    },
+    {
+      "name": "Coding in Java",
+      "type": "HARDSKILL",
+      "maxGrade": 10
+    },
+    {
+      "name": "Coding in Python",
+      "type": "HARDSKILL",
+      "maxGrade": 10
+    },
+    {
+      "name": "Coding in Erlang",
+      "type": "HARDSKILL",
+      "maxGrade": 10
+    }
+  ],
+  "team": [
+    {
+      "name": "John Rambo",
+      "grades": {
+        "Coding in Java": 1,
+        "Coding in Python": 5,
+        "Coding in Erlang": 5,
+        "Being nice to strangers": 5,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 5
+      }
+    },
+    {
+      "name": "Wayne Gretzky",
+      "grades": {
+        "Coding in Java": 5,
+        "Coding in Python": 5,
+        "Coding in Erlang": 5,
+        "Being nice to strangers": 5,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 5
+      }
+    },
+    {
+      "name": "Lucky Luke",
+      "grades": {
+        "Coding in Java": 5,
+        "Coding in Python": 5,
+        "Coding in Erlang": 5,
+        "Being nice to strangers": 5,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 5
+      }
+    },
+    {
+      "name": "Queen Elizabeth",
+      "grades": {
+        "Coding in Java": 5,
+        "Coding in Python": 5,
+        "Coding in Erlang": 5,
+        "Being nice to strangers": 5,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 5
+      }
+    },
+    {
+      "name": "Bruce Wayne",
+      "grades": {
+        "Coding in Java": 5,
+        "Coding in Python": 5,
+        "Coding in Erlang": 5,
+        "Being nice to strangers": 5,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 5
+      }
+    },
+    {
+      "name": "Mick Jagger",
+      "grades": {
+        "Coding in Java": 5,
+        "Coding in Python": 5,
+        "Coding in Erlang": 5,
+        "Being nice to strangers": 5,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 5
+      }
+    },
+    {
+      "name": "Harry Potter",
+      "grades": {
+        "Coding in Java": 5,
+        "Coding in Python": 5,
+        "Coding in Erlang": 5,
+        "Being nice to strangers": 5,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 5
+      }
+    },
+    {
+      "name": "Dirty Harry",
+      "grades": {
+        "Coding in Java": 5,
+        "Coding in Python": 5,
+        "Coding in Erlang": 5,
+        "Being nice to strangers": 5,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 5
+      }
+    }
+  ]
+}
