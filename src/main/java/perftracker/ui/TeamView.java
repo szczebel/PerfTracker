@@ -116,7 +116,10 @@ public class TeamView {
         return flowLayout(FlowLayout.RIGHT,
                 label("New:"),
                 textField,
-                button("Add", () -> system.addTeamMember(textField.getText().trim()))
+                button("Add", () -> {
+                    String trimmed = textField.getText().trim();
+                    if(!trimmed.isEmpty()) system.addTeamMember(trimmed);
+                })
         );
     }
 

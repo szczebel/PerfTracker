@@ -49,7 +49,6 @@ public class GUI {
 
         f.add(borderLayout()
                 .north(fileViewBuilder.build())
-//                .north(gridLayout(1,2,statusBar.getComponent(),fileViewBuilder.build()))
                 .center(createCenter())
                 .south(statusBar.getComponent())
                 .build());
@@ -87,3 +86,6 @@ public class GUI {
     }
 
 }
+//todo pdf
+//todo edit&remove criteria
+//todo remove team member

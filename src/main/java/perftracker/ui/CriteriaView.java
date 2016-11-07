@@ -53,10 +53,14 @@ public class CriteriaView {
                 typeSelector,
                 label("Max grade:"),
                 new JSpinner(numberModel),
-                button("Add", () -> system.addCriteria(
-                        textField.getText().trim(),
-                        (CriteriaType) typeSelector.getSelectedItem(),
-                        numberModel.getNumber().intValue()))
+                button("Add", () -> {
+                    String trimmed = textField.getText().trim();
+                    if (!trimmed.isEmpty())
+                        system.addCriteria(
+                                trimmed,
+                                (CriteriaType) typeSelector.getSelectedItem(),
+                                numberModel.getNumber().intValue());
+                })
         );
     }
 
