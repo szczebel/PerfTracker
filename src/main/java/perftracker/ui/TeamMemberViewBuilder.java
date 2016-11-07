@@ -41,9 +41,9 @@ public class TeamMemberViewBuilder {
                 Columns.create(Row.class)
                         .column("Criteria", String.class, Row::getCriteriaName)
                         .column("Type", CriteriaType.class, Row::getType)
-                        .column("Grade", Integer.class, Row::getGrade, setter)
+                        .column("Score", Integer.class, Row::getGrade, setter) //todo: red outline when out fo range
         );
-        return tablePanel.getComponent();
+        return tablePanel.getScrollPane();
     }
 
     private static class Row {

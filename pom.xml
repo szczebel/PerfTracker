@@ -16,7 +16,7 @@
     </properties>
 
     <build>
-        <finalName>PerformanceTracker</finalName>
+        <finalName>PerformanceMatrix</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -43,8 +43,8 @@
                         </goals>
                         <configuration>
                             <headerType>gui</headerType>
-                            <jar>target/PerformanceTracker.jar</jar>
-                            <outfile>target/PerformanceTracker.exe</outfile>
+                            <jar>target/PerformanceMatrix.jar</jar>
+                            <outfile>target/PerformanceMatrix.exe</outfile>
                             <icon>dist/icon.png.ico</icon>
                             <downloadUrl>http://java.com/download</downloadUrl>
                             <jre>

@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import perftracker.domain.PerformanceTrackingSystem;
 import perftracker.domain.TeamMember;
+import swingutils.layout.cards.CardPanel;
 import swingutils.layout.cards.FadingCardPanel;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 
 import static swingutils.components.ComponentFactory.withGradientHeader;
@@ -13,11 +15,15 @@ import static swingutils.components.ComponentFactory.withGradientHeader;
 @Component
 class TeamMemberViewContainer {
 
+    private static final String EMPTY_PLACEHOLDER = "$$$empty placeholder$$$";
     @Autowired
     private TeamMemberViewBuilder teamMemberViewBuilder;
+    @Autowired
+    private TeamMemberSelection teamMemberSelection;
 
     private PerformanceTrackingSystem system;
-    private FadingCardPanel panel = new FadingCardPanel();
+//    private CardPanel panel = new CardPanel();
+    private CardPanel panel = new FadingCardPanel();
 
     public JComponent getComponent() {
         return panel.getComponent();
@@ -26,17 +32,26 @@ class TeamMemberViewContainer {
     void bindTo(PerformanceTrackingSystem system) {
         this.system = system;
         panel.removeAll();
-        panel.addCard("empty placeholder", withGradientHeader(new JPanel(),"Details of selected team member"));
+        panel.addCard(EMPTY_PLACEHOLDER, withGradientHeader(new JPanel(),"Details of selected team member"));
     }
 
-    void showDetails(TeamMember selection) {
-        if (!panel.cardExists(selection.getName())) {
-            panel.addCard(selection.getName(),
-                    withGradientHeader(
-                            teamMemberViewBuilder.build(selection, system),
-                            "Details of " + selection.getName())
-            );
+    @PostConstruct
+    void init(){
+        teamMemberSelection.whenSelectionChanged(this::showDetails);
+    }
+
+    private void showDetails(TeamMember selection) {
+        if(selection == null) {
+            panel.showCard(EMPTY_PLACEHOLDER);
+        } else {
+            if (!panel.cardExists(selection.getName())) {
+                panel.addCard(selection.getName(),
+                        withGradientHeader(
+                                teamMemberViewBuilder.build(selection, system),
+                                "Details of " + selection.getName())
+                );
+            }
+            panel.showCard(selection.getName());
         }
-        panel.showCard(selection.getName());
     }
 }

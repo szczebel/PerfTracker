@@ -13,6 +13,8 @@ public class Binder {
     @Autowired
     private TeamView teamView;
     @Autowired
+    private TeamMemberViewContainer teamMemberViewContainer;
+    @Autowired
     private GraphView graphView;
     @Autowired
     private DirtyTracker dirtyTracker;
@@ -20,7 +22,8 @@ public class Binder {
     public void bindAllTo(PerformanceTrackingSystem system) {
         dirtyTracker.bindTo(system);
         criteriaView.bindTo(system);
-        teamView.bindTo(system);
         graphView.bindTo(system);
+        teamView.bindTo(system);
+        teamMemberViewContainer.bindTo(system);
     }
 }

@@ -65,7 +65,7 @@ public class Serializer {
         }
 
         CriteriaImpl findCriteriaByName(String name) throws IOException {
-            return criteria.stream().filter(c -> name.equals(c.getName())).findFirst().orElseThrow(IOException::new);//todo: descriptive error message
+            return criteria.stream().filter(c -> name.equals(c.getName())).findFirst().orElseThrow(IOException::new);//maybe: descriptive error message
         }
     }
 

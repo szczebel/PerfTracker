@@ -1,7 +1,6 @@
 package perftracker.ui;
 
 import ca.odell.glazedlists.EventList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import perftracker.domain.PerformanceTrackingSystem;
 import perftracker.domain.TeamMember;
@@ -11,6 +10,8 @@ import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 import static perftracker.domain.CriteriaType.HARDSKILL;
 import static perftracker.domain.CriteriaType.SOFTSKILL;
@@ -23,56 +24,73 @@ import static swingutils.layout.LayoutBuilders.flowLayout;
 @Component
 public class TeamView {
 
-    @Autowired
-    private TeamMemberViewContainer detailsContainer;
+    private final JComponent component;
 
     private PerformanceTrackingSystem system;
     private EventList<Row> viewModel = eventList();
+    private TablePanel<Row> tablePanel;
+    private java.util.List<Consumer<TeamMember>> selectionListeners = new ArrayList<>();
 
-    JComponent build() {
-        TablePanel<Row> tablePanel = createTeamTable();
-        showDetailsOnSelectionChange(tablePanel);
+    public TeamView() {
+        this.component = build();
+    }
 
+    TeamMember getSelectedTeamMember() {
+        Row selection = tablePanel.getSelection();
+        return selection != null ? selection.teamMember : null;
+    }
+
+    void whenSelectionChanged(Consumer<TeamMember> listener) {
+        selectionListeners.add(listener);
+    }
+
+    JComponent getComponent() {
+        return component;
+    }
+
+    private JComponent build() {
+        createTeamTable();
         return borderLayout()
                 .center(tablePanel.getComponent())
-                .south(buildAddNewTeamMemberPanel())//todo: fix dropping on resize caused by flow layout
+                .south(buildAddNewTeamMemberPanel())
                 .build();
     }
 
-    private TablePanel<Row> createTeamTable() {
-        TablePanel<Row> tablePanel = TableFactory
+    //todo: fix dropping on resize caused by flow layout
+
+    private void notifyListenersOnSelectionChange() {
+        tablePanel.getTable().getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                TeamMember selection = getSelectedTeamMember();
+                selectionListeners.forEach(l -> l.accept(selection));
+            }
+        });
+    }
+
+    private void createTeamTable() {
+        tablePanel = TableFactory
                 .createTablePanel(
                         viewModel,
                         Columns.create(Row.class)
                                 .column("Name", String.class, Row::getName)
-                                .column(HARDSKILL.name() + " total grade", Integer.class, Row::getTotalHardskillGrade)
-                                .column(SOFTSKILL.name() + " total grade", Integer.class, Row::getTotalSoftskillGrade)
+                                .column(HARDSKILL + "s total score", Integer.class, Row::getTotalHardskillGrade)
+                                .column(SOFTSKILL + "s total score", Integer.class, Row::getTotalSoftskillGrade)
                 );
         tablePanel.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        return tablePanel;
+        notifyListenersOnSelectionChange();
     }
 
     void bindTo(PerformanceTrackingSystem system) {
         this.system = system;
         clearEventList(viewModel);
-        detailsContainer.bindTo(system);
 
         system.getTeam().forEach(this::addTeamMemberToViewModel);
         system.whenTeamMemberAdded(this::addTeamMemberToViewModel);
     }
 
-    private void showDetailsOnSelectionChange(TablePanel<Row> tablePanel) {
-        tablePanel.getTable().getSelectionModel().addListSelectionListener(e -> {
-            Row selection = tablePanel.getSelection();
-            if (!e.getValueIsAdjusting() && selection != null) {
-                detailsContainer.showDetails(selection.teamMember);
-            }
-        });
-    }
-
     private JComponent buildAddNewTeamMemberPanel() {
         JTextField textField = new JTextField(15);
-        return flowLayout(FlowLayout.CENTER,
+        return flowLayout(FlowLayout.RIGHT,
                 label("New:"),
                 textField,
                 button("Add", () -> system.addTeamMember(textField.getText().trim()))
@@ -100,11 +118,11 @@ public class TeamView {
             return teamMember.getName();
         }
 
-        int getTotalHardskillGrade() {//todo: cache it
+        int getTotalHardskillGrade() {
             return teamMember.getTotalGrade(HARDSKILL);
         }
 
-        int getTotalSoftskillGrade() {//todo: cache it
+        int getTotalSoftskillGrade() {
             return teamMember.getTotalGrade(SOFTSKILL);
         }
     }

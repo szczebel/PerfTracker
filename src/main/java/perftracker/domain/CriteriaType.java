@@ -1,5 +1,15 @@
 package perftracker.domain;
 
 public enum CriteriaType {
-    HARDSKILL, SOFTSKILL
+    HARDSKILL{
+        @Override
+        public String toString() {
+            return "Hard skill";
+        }
+    }, SOFTSKILL {
+        @Override
+        public String toString() {
+            return "Soft skill";
+        }
+    }
 }

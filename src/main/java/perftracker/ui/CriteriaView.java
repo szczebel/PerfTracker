@@ -22,6 +22,8 @@ import static swingutils.layout.LayoutBuilders.flowLayout;
 @Component
 public class CriteriaView {
 
+    //todo should be collapsible
+
     private PerformanceTrackingSystem system;
     private EventList<Criteria> viewModel = eventList();
 
@@ -33,12 +35,12 @@ public class CriteriaView {
                         Columns.create(Criteria.class)
                                 .column("Name", String.class, Criteria::getName)
                                 .column("Type", CriteriaType.class, Criteria::getType)
-                                .column("Max grade", Integer.class, Criteria::getMaxGrade)
+                                .column("Max score", Integer.class, Criteria::getMaxGrade)
                 );
         tablePanel.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         return borderLayout()
-                .center(tablePanel.getComponent())
                 .south(buildAddNewCriterionPanel())
+                .center(tablePanel.getScrollPane())
                 .build();
     }
 
@@ -46,7 +48,7 @@ public class CriteriaView {
         JTextField textField = new JTextField(15);
         SpinnerNumberModel numberModel = new SpinnerNumberModel(10, 1, 100, 1);
         JComboBox<CriteriaType> typeSelector = new JComboBox<>(CriteriaType.values());
-        return flowLayout(FlowLayout.CENTER,
+        return flowLayout(FlowLayout.RIGHT,
                 label("New:"),
                 textField,
                 label("Type:"),
