@@ -4,16 +4,15 @@ package perftracker.ui;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import swingutils.frame.RichFrame;
-import swingutils.layout.cards.CardMenuBuilder;
-import swingutils.layout.cards.CardMenuBuilders;
-import swingutils.layout.cards.MenuPlacement;
 
 import javax.swing.*;
 import java.awt.*;
 
+import static javax.swing.JSplitPane.HORIZONTAL_SPLIT;
+import static javax.swing.JSplitPane.VERTICAL_SPLIT;
 import static swingutils.components.ComponentFactory.decorate;
+import static swingutils.components.ComponentFactory.splitPane;
 import static swingutils.layout.LayoutBuilders.borderLayout;
-import static swingutils.layout.cards.CardLayoutBuilder.cardLayout;
 
 @Component
 public class GUI {
@@ -23,12 +22,20 @@ public class GUI {
     private static final String COMPARISON_GRAPH = "Comparison graph";
     private static final String CRITERIA = "Criteria";
 
-    @Autowired TeamView teamView;
-    @Autowired CriteriaView criteriaView;
-    @Autowired GraphView graphView;
-    @Autowired FileViewBuilder fileViewBuilder;
-    @Autowired StatusBar statusBar;
-    @Autowired Close close;
+    @Autowired
+    TeamView teamView;
+    @Autowired
+    CriteriaView criteriaView;
+    @Autowired
+    GraphView graphView;
+    @Autowired
+    FileViewBuilder fileViewBuilder;
+    @Autowired
+    TeamMemberViewContainer detailsContainer;
+    @Autowired
+    StatusBar statusBar;
+    @Autowired
+    Close close;
 
     public void show() {
         RichFrame f = new RichFrame();
@@ -39,26 +46,26 @@ public class GUI {
         f.addWindowListener(close);
 
 
-        CardMenuBuilder<JComponent> cardMenuBuilder = CardMenuBuilders.NoBorderOrange()
-                .menuPlacement(MenuPlacement.LEFT)
-                .menuBarCustomizer(menu -> decorate(menu).withEmptyBorder(8, 8, 8, 4).get());
-
-        JComponent cards = cardLayout(cardMenuBuilder)
-                .addTab(TEAM, decorate(teamView.build()).withEmptyBorder(8, 4, 8, 8).get())
-                .addTab(COMPARISON_GRAPH, createDecoratedPanel(COMPARISON_GRAPH, graphView))
-                .addTab(CRITERIA, createDecoratedPanel(CRITERIA, criteriaView.build()))
-                .build();
-
         f.add(borderLayout()
                 .north(fileViewBuilder.build())
-                .center(cards)
+                .center(createCenter())
                 .south(statusBar.getComponent())
                 .build());
         f.setVisible(true);
     }
 
-    private JComponent createDecoratedPanel(String title, JComponent component) {
-        return decorate(component).withGradientHeader(title).withEmptyBorder(8, 4, 8, 8).get();
+    private JComponent createCenter() {
+        return splitPane(HORIZONTAL_SPLIT,
+                splitPane(VERTICAL_SPLIT,
+                        decorate(criteriaView.build()).withGradientHeader(CRITERIA).withEmptyBorder(4, 4, 0, 0).minSize(200,200).get(),
+                        splitPane(VERTICAL_SPLIT,
+                                decorate(teamView.build()).withGradientHeader(TEAM).withEmptyBorder(4, 4, 0, 0).minSize(200,200).get(),
+                                decorate(detailsContainer.getComponent()).withEmptyBorder(4,4,0,0).minSize(200,200).get()
+                        )
+                ),
+                decorate(graphView).withGradientHeader(COMPARISON_GRAPH).withEmptyBorder(4, 4, 0, 4).get()
+        );
+
     }
 
 }

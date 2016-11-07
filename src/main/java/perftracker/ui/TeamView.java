@@ -15,14 +15,16 @@ import java.awt.*;
 import static perftracker.domain.CriteriaType.HARDSKILL;
 import static perftracker.domain.CriteriaType.SOFTSKILL;
 import static swingutils.EventListHelper.*;
-import static swingutils.components.ComponentFactory.*;
-import static swingutils.layout.LayoutBuilders.*;
+import static swingutils.components.ComponentFactory.button;
+import static swingutils.components.ComponentFactory.label;
+import static swingutils.layout.LayoutBuilders.borderLayout;
+import static swingutils.layout.LayoutBuilders.flowLayout;
 
 @Component
 public class TeamView {
 
     @Autowired
-    private TeamMemberViewContainer3 detailsContainer;
+    private TeamMemberViewContainer detailsContainer;
 
     private PerformanceTrackingSystem system;
     private EventList<Row> viewModel = eventList();
@@ -31,13 +33,10 @@ public class TeamView {
         TablePanel<Row> tablePanel = createTeamTable();
         showDetailsOnSelectionChange(tablePanel);
 
-        return gridLayout(1, 2,
-                withGradientHeader(borderLayout()
-                        .south(buildAddNewTeamMemberPanel())
-                        .center(tablePanel.getComponent())
-                        .build(), "Team"),
-                decorate(detailsContainer.getComponent()).withEmptyBorder(0, 8, 0, 0).get()
-        );
+        return borderLayout()
+                .center(tablePanel.getComponent())
+                .south(buildAddNewTeamMemberPanel())//todo: fix dropping on resize caused by flow layout
+                .build();
     }
 
     private TablePanel<Row> createTeamTable() {
@@ -56,7 +55,7 @@ public class TeamView {
     void bindTo(PerformanceTrackingSystem system) {
         this.system = system;
         clearEventList(viewModel);
-        detailsContainer.resetWith(system);
+        detailsContainer.bindTo(system);
 
         system.getTeam().forEach(this::addTeamMemberToViewModel);
         system.whenTeamMemberAdded(this::addTeamMemberToViewModel);
@@ -74,7 +73,7 @@ public class TeamView {
     private JComponent buildAddNewTeamMemberPanel() {
         JTextField textField = new JTextField(15);
         return flowLayout(FlowLayout.CENTER,
-                label("Name of new team member:"),
+                label("New:"),
                 textField,
                 button("Add", () -> system.addTeamMember(textField.getText().trim()))
         );

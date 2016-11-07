@@ -7,13 +7,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 
 class PTSImpl implements PerformanceTrackingSystem {
 
 
     List<CriteriaImpl> criteria = new ArrayList<>();
-    List<TeamMemberImpl> team = new ArrayList<>();
+    private List<TeamMemberImpl> team = new ArrayList<>();
     private List<Consumer<Criteria>> addCriteriaListeners = new ArrayList<>();
     private List<Consumer<TeamMember>> addTeamMemberListeners = new ArrayList<>();
 
@@ -50,12 +51,13 @@ class PTSImpl implements PerformanceTrackingSystem {
     }
 
     @Override
-    public void updateGrade(String teamMemberName, Criteria criteria, int newValue) {
-        if(!this.criteria.contains(criteria)) throw new IllegalArgumentException("Unknown criteria" + criteria.getName());
-        if(newValue<0 || newValue> criteria.getMaxGrade()) throw new IllegalArgumentException("Grade out of range");
+    public void updateGrade(String teamMemberName, Criteria criterion, int newValue) {
+        //noinspection SuspiciousMethodCalls
+        if(!this.criteria.contains(criterion)) throw new IllegalArgumentException("Unknown criteria" + criterion.getName());
+        if(newValue<0 || newValue> criterion.getMaxGrade()) throw new IllegalArgumentException("Grade out of range");
         TeamMemberImpl teamMember =
                 team.stream().filter(tm -> teamMemberName.equals(tm.getName())).findFirst().orElseThrow(IllegalArgumentException::new);
-        setGradeOn(teamMember, criteria, newValue);
+        setGradeOn(teamMember, criterion, newValue);
     }
 
     private void setGradeOn(TeamMemberImpl tm, Criteria newCriteria) {
@@ -73,5 +75,15 @@ class PTSImpl implements PerformanceTrackingSystem {
     @Override
     public void whenTeamMemberAdded(Consumer<TeamMember> listener) {
         addTeamMemberListeners.add(listener);
+    }
+
+
+    @Override
+    public int getMaxGrade(CriteriaType type) {
+        return getCriteria().stream().filter(isOfType(type)).mapToInt(Criteria::getMaxGrade).sum();
+    }
+
+    private Predicate<Criteria> isOfType(CriteriaType type) {
+        return c -> type == c.getType();
     }
 }

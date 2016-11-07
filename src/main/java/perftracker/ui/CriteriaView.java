@@ -47,7 +47,7 @@ public class CriteriaView {
         SpinnerNumberModel numberModel = new SpinnerNumberModel(10, 1, 100, 1);
         JComboBox<CriteriaType> typeSelector = new JComboBox<>(CriteriaType.values());
         return flowLayout(FlowLayout.CENTER,
-                label("New criterion:"),
+                label("New:"),
                 textField,
                 label("Type:"),
                 typeSelector,

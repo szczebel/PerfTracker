@@ -11,7 +11,7 @@ import javax.swing.*;
 import static swingutils.components.ComponentFactory.withGradientHeader;
 
 @Component
-class TeamMemberViewContainer3 {
+class TeamMemberViewContainer {
 
     @Autowired
     private TeamMemberViewBuilder teamMemberViewBuilder;
@@ -23,11 +23,10 @@ class TeamMemberViewContainer3 {
         return panel.getComponent();
     }
 
-    void resetWith(PerformanceTrackingSystem system) {
+    void bindTo(PerformanceTrackingSystem system) {
         this.system = system;
         panel.removeAll();
-        panel.addCard("something has to be here, so that first fade-in works ok", new JPanel());
-
+        panel.addCard("empty placeholder", withGradientHeader(new JPanel(),"Details of selected team member"));
     }
 
     void showDetails(TeamMember selection) {
