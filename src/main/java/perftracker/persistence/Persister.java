@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import perftracker.DirtyTracker;
 import perftracker.domain.PerformanceTrackingSystem;
 import perftracker.domain.impl.Factory;
+import perftracker.domain.impl.Serializer;
 import perftracker.ui.Binder;
 
 import java.io.File;
@@ -24,7 +25,7 @@ public class Persister {
     @Autowired
     private Factory domainFactory;
     @Autowired
-    private ObjectMapper jackson;
+    private Serializer serializer;
     @Autowired
     private Binder binder;
     @Autowired
@@ -49,13 +50,13 @@ public class Persister {
     }
 
     private void saveTo(File projectFile) throws IOException {
-        jackson.writeValue(projectFile, current);
+        serializer.toFile(projectFile, current);
         dirtyTracker.setDirty(false);
         statusBar.accept("Project file saved successfully");
     }
 
     public void loadFrom(File file) throws IOException {
-        PerformanceTrackingSystem system = jackson.readValue(file, domainFactory.getPTSClass());
+        PerformanceTrackingSystem system = serializer.fromFile(file);
         this.current = system;
         binder.bindAllTo(system);
         saveRecentProjectFile(file);

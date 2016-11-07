@@ -12,7 +12,6 @@ import javax.swing.*;
 import java.awt.*;
 
 import static swingutils.components.ComponentFactory.decorate;
-import static swingutils.components.ComponentFactory.label;
 import static swingutils.layout.LayoutBuilders.borderLayout;
 import static swingutils.layout.cards.CardLayoutBuilder.cardLayout;
 
@@ -26,6 +25,7 @@ public class GUI {
 
     @Autowired TeamView teamView;
     @Autowired CriteriaView criteriaView;
+    @Autowired GraphView graphView;
     @Autowired FileViewBuilder fileViewBuilder;
     @Autowired StatusBar statusBar;
     @Autowired Close close;
@@ -45,7 +45,7 @@ public class GUI {
 
         JComponent cards = cardLayout(cardMenuBuilder)
                 .addTab(TEAM, decorate(teamView.build()).withEmptyBorder(8, 4, 8, 8).get())
-                .addTab(COMPARISON_GRAPH, createDecoratedPanel(COMPARISON_GRAPH, label("Not implemented yet")))//todo comparison graph
+                .addTab(COMPARISON_GRAPH, createDecoratedPanel(COMPARISON_GRAPH, graphView))
                 .addTab(CRITERIA, createDecoratedPanel(CRITERIA, criteriaView.build()))
                 .build();
 

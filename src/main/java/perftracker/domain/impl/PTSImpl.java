@@ -12,19 +12,14 @@ import java.util.function.Consumer;
 class PTSImpl implements PerformanceTrackingSystem {
 
 
-    private List<Criteria> criteria = new ArrayList<>();
-    private List<TeamMemberImpl> team = new ArrayList<>();
+    List<CriteriaImpl> criteria = new ArrayList<>();
+    List<TeamMemberImpl> team = new ArrayList<>();
     private List<Consumer<Criteria>> addCriteriaListeners = new ArrayList<>();
     private List<Consumer<TeamMember>> addTeamMemberListeners = new ArrayList<>();
 
     @Override
     public List<Criteria> getCriteria() {
         return Collections.unmodifiableList(criteria);
-    }
-
-    @Override
-    public Criteria findCriteria(String criteriaName) {
-        return findOptionalCriteria(criteriaName).orElseThrow(() -> new IllegalArgumentException("Unknown criteria: " + criteriaName));
     }
 
     private Optional<Criteria> findOptionalCriteria(String criteriaName) {
@@ -37,8 +32,9 @@ class PTSImpl implements PerformanceTrackingSystem {
     }
 
     @Override
-    public void addCriteria(Criteria newCriteria) {
-        if(findOptionalCriteria(newCriteria.getName()).isPresent()) throw new IllegalArgumentException(newCriteria.getName() + " already exists");
+    public void addCriteria(String name, CriteriaType type, int maxGrade) {
+        if(findOptionalCriteria(name).isPresent()) throw new IllegalArgumentException(name + " already exists");
+        CriteriaImpl newCriteria = new CriteriaImpl(name, type, maxGrade);
         criteria.add(newCriteria);
         addCriteriaListeners.forEach(criteriaConsumer -> criteriaConsumer.accept(newCriteria));
         team.forEach(tm -> setGradeOn(tm, newCriteria));
@@ -54,17 +50,18 @@ class PTSImpl implements PerformanceTrackingSystem {
     }
 
     @Override
-    public void updateGrade(String teamMemberName, String criteria, int newValue) {
-        if(newValue<0 || newValue>findCriteria(criteria).getMaxGrade()) throw new IllegalArgumentException("Grade out of range");
+    public void updateGrade(String teamMemberName, Criteria criteria, int newValue) {
+        if(!this.criteria.contains(criteria)) throw new IllegalArgumentException("Unknown criteria" + criteria.getName());
+        if(newValue<0 || newValue> criteria.getMaxGrade()) throw new IllegalArgumentException("Grade out of range");
         TeamMemberImpl teamMember =
                 team.stream().filter(tm -> teamMemberName.equals(tm.getName())).findFirst().orElseThrow(IllegalArgumentException::new);
         setGradeOn(teamMember, criteria, newValue);
     }
 
     private void setGradeOn(TeamMemberImpl tm, Criteria newCriteria) {
-        setGradeOn(tm, newCriteria.getName(), newCriteria.getMaxGrade()/2);
+        setGradeOn(tm, newCriteria, newCriteria.getMaxGrade()/2);
     }
-    private void setGradeOn(TeamMemberImpl tm, String criteria, int value) {
+    private void setGradeOn(TeamMemberImpl tm, Criteria criteria, int value) {
         tm.setGrade(criteria, value);
     }
 

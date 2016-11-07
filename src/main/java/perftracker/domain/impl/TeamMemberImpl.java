@@ -1,5 +1,7 @@
 package perftracker.domain.impl;
 
+import perftracker.domain.Criteria;
+import perftracker.domain.CriteriaType;
 import perftracker.domain.TeamMember;
 
 import java.util.*;
@@ -7,10 +9,12 @@ import java.util.function.BiConsumer;
 
 class TeamMemberImpl implements TeamMember {
     private String name;
-    private Map<String, Integer> grades = new HashMap<>();
+    private Map<Criteria, Integer> grades = new HashMap<>();
+    private List<BiConsumer<Criteria, Integer>> listeners = new ArrayList<>();
 
     @SuppressWarnings("unused")
-    TeamMemberImpl() {}
+    TeamMemberImpl() {
+    }
 
     TeamMemberImpl(String key) {
         this.name = key;
@@ -22,18 +26,26 @@ class TeamMemberImpl implements TeamMember {
     }
 
     @Override
-    public Map<String, Integer> getGrades() {
+    public Map<Criteria, Integer> getGrades() {
         return Collections.unmodifiableMap(grades);
     }
 
-    void setGrade(String key, int value){
+    void setGrade(Criteria key, int value) {
         grades.put(key, value);
         listeners.forEach(l -> l.accept(key, value));
     }
 
-    private List<BiConsumer<String, Integer>> listeners = new ArrayList<>();
     @Override
-    public void whenGradeChanged(BiConsumer<String, Integer> listener) {
+    public int getTotalGrade(CriteriaType type) {
+        return getGrades().entrySet().stream()
+                .filter(entry -> type == entry.getKey().getType())
+                .mapToInt(Map.Entry::getValue).sum();
+
+    }
+
+    @Override
+    public void whenGradeChanged(BiConsumer<Criteria, Integer> listener) {
         listeners.add(listener);
     }
+    //todo: add stopWatching to fix memory leak
 }

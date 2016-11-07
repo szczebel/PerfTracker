@@ -3,32 +3,24 @@ package perftracker.ui;
 import ca.odell.glazedlists.EventList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import perftracker.domain.CriteriaType;
 import perftracker.domain.PerformanceTrackingSystem;
 import perftracker.domain.TeamMember;
-import perftracker.domain.impl.Factory;
 import swingutils.components.table.TableFactory;
 import swingutils.components.table.TablePanel;
 import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
-import java.util.function.Predicate;
 
 import static perftracker.domain.CriteriaType.HARDSKILL;
 import static perftracker.domain.CriteriaType.SOFTSKILL;
 import static swingutils.EventListHelper.*;
 import static swingutils.components.ComponentFactory.*;
-import static swingutils.layout.LayoutBuilders.borderLayout;
-import static swingutils.layout.LayoutBuilders.flowLayout;
-import static swingutils.layout.LayoutBuilders.gridLayout;
+import static swingutils.layout.LayoutBuilders.*;
 
 @Component
 public class TeamView {
 
-    @Autowired
-    private Factory domainFactory;
     @Autowired
     private TeamMemberViewContainer3 detailsContainer;
 
@@ -80,7 +72,7 @@ public class TeamView {
     }
 
     private JComponent buildAddNewTeamMemberPanel() {
-        JTextField textField = new JTextField(30);
+        JTextField textField = new JTextField(15);
         return flowLayout(FlowLayout.CENTER,
                 label("Name of new team member:"),
                 textField,
@@ -110,20 +102,11 @@ public class TeamView {
         }
 
         int getTotalHardskillGrade() {//todo: cache it
-            return teamMember.getGrades().entrySet().stream()
-                    .filter(by(HARDSKILL))
-                    .mapToInt(Map.Entry::getValue).sum();
+            return teamMember.getTotalGrade(HARDSKILL);
         }
 
         int getTotalSoftskillGrade() {//todo: cache it
-            return teamMember.getGrades().entrySet().stream()
-                    .filter(by(SOFTSKILL))
-                    .mapToInt(Map.Entry::getValue).sum();
-
-        }
-
-        private Predicate<Map.Entry<String, Integer>> by(CriteriaType type) {
-            return gradeEntry -> type == system.findCriteria(gradeEntry.getKey()).getType();
+            return teamMember.getTotalGrade(SOFTSKILL);
         }
     }
 }

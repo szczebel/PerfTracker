@@ -7,15 +7,13 @@ public interface PerformanceTrackingSystem {
 
     List<Criteria> getCriteria();
 
-    Criteria findCriteria(String criteriaName);
-
     List<TeamMember> getTeam();
 
-    void addCriteria(Criteria newCriteria);
+    void addCriteria(String name, CriteriaType type, int maxGrade);
 
     void addTeamMember(String newTeamMember);
 
-    void updateGrade(String teamMember, String criteria, int newValue);
+    void updateGrade(String teamMember, Criteria criteria, int newValue);
 
     void whenCriteriaAdded(Consumer<Criteria> listener);
 

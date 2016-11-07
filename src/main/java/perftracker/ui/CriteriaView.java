@@ -1,18 +1,15 @@
 package perftracker.ui;
 
 import ca.odell.glazedlists.EventList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import perftracker.domain.Criteria;
 import perftracker.domain.CriteriaType;
 import perftracker.domain.PerformanceTrackingSystem;
-import perftracker.domain.impl.Factory;
 import swingutils.components.table.TableFactory;
 import swingutils.components.table.TablePanel;
 import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
-
 import java.awt.*;
 
 import static swingutils.EventListHelper.clearEventList;
@@ -24,9 +21,6 @@ import static swingutils.layout.LayoutBuilders.flowLayout;
 
 @Component
 public class CriteriaView {
-
-    @Autowired
-    private Factory domainFactory;
 
     private PerformanceTrackingSystem system;
     private EventList<Criteria> viewModel = eventList();
@@ -49,7 +43,7 @@ public class CriteriaView {
     }
 
     private JComponent buildAddNewCriterionPanel() {
-        JTextField textField = new JTextField(30);
+        JTextField textField = new JTextField(15);
         SpinnerNumberModel numberModel = new SpinnerNumberModel(10, 1, 100, 1);
         JComboBox<CriteriaType> typeSelector = new JComboBox<>(CriteriaType.values());
         return flowLayout(FlowLayout.CENTER,
@@ -59,7 +53,10 @@ public class CriteriaView {
                 typeSelector,
                 label("Max grade:"),
                 new JSpinner(numberModel),
-                button("Add", () -> newCriterion(textField.getText().trim(), (CriteriaType) typeSelector.getSelectedItem(), numberModel.getNumber().intValue()))
+                button("Add", () -> system.addCriteria(
+                        textField.getText().trim(),
+                        (CriteriaType) typeSelector.getSelectedItem(),
+                        numberModel.getNumber().intValue()))
         );
     }
 
@@ -68,10 +65,6 @@ public class CriteriaView {
         clearEventList(viewModel);
         viewModel.addAll(system.getCriteria());
         system.whenCriteriaAdded(viewModel::add);
-    }
-
-    private void newCriterion(String name, CriteriaType type, int maxGrade) {
-        system.addCriteria(domainFactory.createCriteria(name, type, maxGrade));
     }
 
 }
