@@ -28,13 +28,13 @@ public class FileViewBuilder {
     private DirtyTracker dirtyTracker;
 
     private JFileChooser fileChooser = new JFileChooser(".");
-    private JLabel filenamebox = label("-");
+    private JLabel filenamebox = label(" <none> ");
     private JLabel unsaved = label("");
 
     JComponent build() {
         filenamebox.setFont(filenamebox.getFont().deriveFont(Font.BOLD));
         persister.onCurrentFileChange(f -> filenamebox.setText(f.getName()));
-        dirtyTracker.whenDirtyChanged(dirty -> unsaved.setText(dirty ? "(unsaved changes)" : ""));
+        dirtyTracker.whenDirtyChanged(dirty -> unsaved.setText(dirty ? " (unsaved changes) " : ""));
 
         return borderLayout()
                 .east(
