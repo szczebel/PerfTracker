@@ -27,7 +27,7 @@ public class FileViewBuilder {
     @Autowired
     private DirtyTracker dirtyTracker;
 
-    private JFileChooser fileChooser = new JFileChooser(".");
+    private JFileChooser fileChooser = new JFileChooser(".");//todo extension filter
     private JLabel filenamebox = label(" <none> ");
     private JLabel unsaved = label("");
 

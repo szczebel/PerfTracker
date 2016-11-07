@@ -22,8 +22,6 @@ import static swingutils.layout.LayoutBuilders.flowLayout;
 @Component
 public class CriteriaView {
 
-    //todo should be collapsible
-
     private PerformanceTrackingSystem system;
     private EventList<Criteria> viewModel = eventList();
 

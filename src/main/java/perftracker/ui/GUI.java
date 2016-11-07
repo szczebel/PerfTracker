@@ -10,10 +10,8 @@ import java.awt.*;
 
 import static javax.swing.JSplitPane.HORIZONTAL_SPLIT;
 import static javax.swing.JSplitPane.VERTICAL_SPLIT;
-import static swingutils.components.ComponentFactory.decorate;
-import static swingutils.components.ComponentFactory.splitPane;
+import static swingutils.components.ComponentFactory.*;
 import static swingutils.layout.LayoutBuilders.borderLayout;
-import static swingutils.layout.LayoutBuilders.gridLayout;
 
 @Component
 public class GUI {
@@ -56,18 +54,34 @@ public class GUI {
         f.setVisible(true);
     }
 
+//    private JComponent createCenter() {
+//
+//        return splitPane(HORIZONTAL_SPLIT,
+//                borderLayout()
+//                        .north(decorate(collapsible(criteriaView.build(), CRITERIA)).withEmptyBorder(0,4,4,0).get())
+//                        .center(
+//                                splitPane(VERTICAL_SPLIT,
+//                                        decorate(teamView.getComponent()).withGradientHeader(TEAM).withEmptyBorder(4, 4, 0, 0).minSize(200, 300).get(),
+//                                        decorate(detailsContainer.getComponent()).withEmptyBorder(4, 4, 4, 0).prefSize(200, 200).get()
+//                                )
+//                        ).build()
+//                ,
+//                decorate(graphView.getComponent()).withGradientHeader(COMPARISON_GRAPH).withEmptyBorder(0, 4, 4, 4).get()
+//        );
+//    }
+
     private JComponent createCenter() {
+
         return splitPane(HORIZONTAL_SPLIT,
                 splitPane(VERTICAL_SPLIT,
                         decorate(criteriaView.build()).withGradientHeader(CRITERIA).withEmptyBorder(0, 4, 0, 0).minSize(200,200).get(),
                         splitPane(VERTICAL_SPLIT,
-                                decorate(teamView.getComponent()).withGradientHeader(TEAM).withEmptyBorder(4, 4, 0, 0).minSize(200,300).get(),
-                                decorate(detailsContainer.getComponent()).withEmptyBorder(4,4,4,0).prefSize(200,200).get()
+                                decorate(teamView.getComponent()).withGradientHeader(TEAM).withEmptyBorder(4, 4, 0, 0).minSize(200, 300).get(),
+                                decorate(detailsContainer.getComponent()).withEmptyBorder(4, 4, 4, 0).prefSize(200, 200).get()
                         )
                 ),
                 decorate(graphView.getComponent()).withGradientHeader(COMPARISON_GRAPH).withEmptyBorder(0, 4, 4, 4).get()
         );
-
     }
 
 }
