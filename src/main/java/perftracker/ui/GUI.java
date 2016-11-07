@@ -36,6 +36,8 @@ public class GUI {
     @Autowired
     Close close;
 
+    static final Color FACTORIAL_COLOR = new Color(128,255,128,128);
+
     public void show() {
         RichFrame f = new RichFrame();
         f.setIconImage(new ImageIcon((getClass().getResource("/icon.png"))).getImage());

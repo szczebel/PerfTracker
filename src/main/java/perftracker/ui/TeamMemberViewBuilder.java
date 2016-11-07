@@ -1,11 +1,13 @@
 package perftracker.ui;
 
 import ca.odell.glazedlists.EventList;
+import org.jdesktop.swingx.painter.MattePainter;
 import org.springframework.stereotype.Component;
 import perftracker.domain.Criteria;
 import perftracker.domain.CriteriaType;
 import perftracker.domain.PerformanceTrackingSystem;
 import perftracker.domain.TeamMember;
+import swingutils.components.table.FactorialPainterHighlighter;
 import swingutils.components.table.TableFactory;
 import swingutils.components.table.TablePanel;
 import swingutils.components.table.descriptor.Columns;
@@ -43,6 +45,15 @@ public class TeamMemberViewBuilder {
                         .column("Type", CriteriaType.class, Row::getType)
                         .column("Score", Integer.class, Row::getGrade, setter) //todo: red outline when out fo range
         );
+
+        tablePanel.getTable().addHighlighter(new FactorialPainterHighlighter(
+                new MattePainter(GUI.FACTORIAL_COLOR), 2,
+                modelRowIndex -> {
+                    Row row = viewModel.get(modelRowIndex);
+                    return row.grade / (float) row.criteria.getMaxGrade();
+                }
+        ));
+
         return tablePanel.getScrollPane();
     }
 

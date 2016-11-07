@@ -1,9 +1,11 @@
 package perftracker.ui;
 
 import ca.odell.glazedlists.EventList;
+import org.jdesktop.swingx.painter.MattePainter;
 import org.springframework.stereotype.Component;
 import perftracker.domain.PerformanceTrackingSystem;
 import perftracker.domain.TeamMember;
+import swingutils.components.table.FactorialPainterHighlighter;
 import swingutils.components.table.TableFactory;
 import swingutils.components.table.TablePanel;
 import swingutils.components.table.descriptor.Columns;
@@ -12,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static perftracker.domain.CriteriaType.HARDSKILL;
 import static perftracker.domain.CriteriaType.SOFTSKILL;
@@ -77,7 +80,27 @@ public class TeamView {
                                 .column(SOFTSKILL + "s total score", Integer.class, Row::getTotalSoftskillGrade)
                 );
         tablePanel.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tablePanel.getTable().addHighlighter(factorial(1, hardskillScorePercentage()));
+        tablePanel.getTable().addHighlighter(factorial(2, softskillScorePercentage()));
         notifyListenersOnSelectionChange();
+    }
+
+    private FactorialPainterHighlighter factorial(int column, Function<Integer, Float> factorFunction) {
+        return new FactorialPainterHighlighter(new MattePainter(GUI.FACTORIAL_COLOR), column, factorFunction);
+    }
+
+    private Function<Integer, Float> softskillScorePercentage() {
+        return modelRowIndex -> {
+            Row row = viewModel.get(modelRowIndex);
+            return row.getTotalSoftskillGrade() / (float) system.getMaxGrade(SOFTSKILL);
+        };
+    }
+
+    private Function<Integer, Float> hardskillScorePercentage() {
+        return modelRowIndex -> {
+            Row row = viewModel.get(modelRowIndex);
+            return row.getTotalHardskillGrade() / (float) system.getMaxGrade(HARDSKILL);
+        };
     }
 
     void bindTo(PerformanceTrackingSystem system) {
