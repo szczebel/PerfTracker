@@ -28,7 +28,7 @@ public class CriteriaView {
 
     JComponent build() {
 
-        ColumnAction<Criteria> deleteAction = new ColumnAction<>(new ImageIcon(getClass().getResource("/delete.png")), "Delete this criteria", this::removeClicked);
+        ColumnAction<Criteria> deleteAction = new ColumnAction<>(new ImageIcon(getClass().getResource("/delete.png")), "Delete this criteria", this::deleteClicked);
         TablePanel<Criteria> tablePanel = TableFactory
                 .createTablePanel(
                         viewModel,
@@ -46,7 +46,7 @@ public class CriteriaView {
                 .build();
     }
 
-    private void removeClicked(Criteria criteria) {
+    private void deleteClicked(Criteria criteria) {
         system.deleteCriteria(criteria);
     }
 

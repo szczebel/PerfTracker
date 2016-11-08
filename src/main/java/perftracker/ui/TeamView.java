@@ -8,6 +8,7 @@ import perftracker.domain.TeamMember;
 import swingutils.components.table.FactorialPainterHighlighter;
 import swingutils.components.table.TableFactory;
 import swingutils.components.table.TablePanel;
+import swingutils.components.table.descriptor.ColumnAction;
 import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
@@ -71,6 +72,11 @@ public class TeamView {
     }
 
     private void createTeamTable() {
+        ColumnAction<Row> deleteAction = new ColumnAction<>(
+                new ImageIcon(getClass().getResource("/delete.png")),
+                "Delete this team member",
+                this::deleteClicked);
+
         tablePanel = TableFactory
                 .createTablePanel(
                         viewModel,
@@ -78,11 +84,17 @@ public class TeamView {
                                 .column("Name", String.class, Row::getName)
                                 .column(HARDSKILL + "s total score", Integer.class, Row::getTotalHardskillGrade)
                                 .column(SOFTSKILL + "s total score", Integer.class, Row::getTotalSoftskillGrade)
+                                .column(deleteAction)
+
                 );
         tablePanel.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tablePanel.getTable().addHighlighter(factorial(1, hardskillScorePercentage()));
         tablePanel.getTable().addHighlighter(factorial(2, softskillScorePercentage()));
         notifyListenersOnSelectionChange();
+    }
+
+    private void deleteClicked(Row row) {
+        //todo: start here
     }
 
     private FactorialPainterHighlighter factorial(int column, Function<Integer, Float> factorFunction) {
@@ -119,7 +131,7 @@ public class TeamView {
                 textField,
                 button("Add", () -> {
                     String trimmed = textField.getText().trim();
-                    if(!trimmed.isEmpty()) system.addTeamMember(trimmed);
+                    if (!trimmed.isEmpty()) system.addTeamMember(trimmed);
                 })
         );
     }

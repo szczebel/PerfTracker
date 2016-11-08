@@ -87,5 +87,4 @@ public class GUI {
 
 }
 //todo pdf
-//todo remove criteria
 //todo remove team member
