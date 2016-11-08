@@ -7,7 +7,6 @@ import perftracker.domain.CriteriaType;
 import perftracker.domain.PerformanceTrackingSystem;
 import perftracker.domain.TeamMember;
 import swingutils.layout.cards.CardPanel;
-import swingutils.layout.cards.FadingCardPanel;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
@@ -28,8 +27,8 @@ class TeamMemberViewContainer {
     private TeamMemberSelection teamMemberSelection;
 
     private PerformanceTrackingSystem system;
-//    private CardPanel panel = new CardPanel();
-    private CardPanel panel = new FadingCardPanel();
+    private CardPanel panel = new CardPanel();
+//    private CardPanel panel = new FadingCardPanel();//todo long-running change of cards is interfering with immediate card removal
 
     public JComponent getComponent() {
         return panel.getComponent();
@@ -39,11 +38,17 @@ class TeamMemberViewContainer {
         this.system = system;
         panel.removeAll();
         panel.addCard(EMPTY_PLACEHOLDER, withGradientHeader(teamMemberViewBuilder.build(NOONE, system),"Details of selected team member"));
+        system.whenTeamMemberDeleted(this::teamMemberRemoved);
     }
 
+    @SuppressWarnings("unused")
     @PostConstruct
     void init(){
         teamMemberSelection.whenSelectionChanged(this::showDetails);
+    }
+
+    private void teamMemberRemoved(TeamMember tm) {
+        panel.removeCard(tm.getName());
     }
 
     private void showDetails(TeamMember selection) {

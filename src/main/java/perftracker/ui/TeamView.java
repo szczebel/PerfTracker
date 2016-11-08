@@ -94,7 +94,7 @@ public class TeamView {
     }
 
     private void deleteClicked(Row row) {
-        //todo: start here
+        system.deleteTeamMember(row.teamMember);
     }
 
     private FactorialPainterHighlighter factorial(int column, Function<Integer, Float> factorFunction) {
@@ -121,6 +121,7 @@ public class TeamView {
 
         system.getTeam().forEach(this::addTeamMemberToViewModel);
         system.whenTeamMemberAdded(this::addTeamMemberToViewModel);
+        system.whenTeamMemberDeleted(this::removeTeamMemberFromViewModel);
         system.whenCriteriaDeleted(c -> tablePanel.getTable().repaint());
     }
 
@@ -136,14 +137,22 @@ public class TeamView {
         );
     }
 
+    private void removeTeamMemberFromViewModel(TeamMember tm) {
+        viewModel.remove(findRow(tm));
+    }
+
     private void addTeamMemberToViewModel(TeamMember tm) {
         addToList(viewModel, new Row(tm));
         tm.whenScoreChanged((s, i) -> resetTeamMember(tm));
     }
 
     private void resetTeamMember(TeamMember tm) {
-        Row row = viewModel.stream().filter(r -> tm.getName().equals(r.getName())).findFirst().orElseThrow(IllegalArgumentException::new);
+        Row row = findRow(tm);
         setInList(viewModel, viewModel.indexOf(row), row);
+    }
+
+    private Row findRow(TeamMember tm) {
+        return viewModel.stream().filter(r -> tm.getName().equals(r.getName())).findFirst().orElseThrow(IllegalArgumentException::new);
     }
 
     private class Row {

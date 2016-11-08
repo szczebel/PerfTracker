@@ -18,6 +18,7 @@ class PTSImpl implements PerformanceTrackingSystem {
     private List<Consumer<Criteria>> addCriteriaListeners = new ArrayList<>();
     private List<Consumer<Criteria>> deleteCriteriaListeners = new ArrayList<>();
     private List<Consumer<TeamMember>> addTeamMemberListeners = new ArrayList<>();
+    private List<Consumer<TeamMember>> deleteTeamMemberListeners = new ArrayList<>();
 
     @Override
     public List<Criteria> getCriteria() {
@@ -54,11 +55,12 @@ class PTSImpl implements PerformanceTrackingSystem {
     @Override
     public void updateScore(String teamMemberName, Criteria criterion, int newValue) {
         validateCriteria(criterion);
-
         if(newValue<0 || newValue> criterion.getMaxScore()) throw new IllegalArgumentException("Grade out of range");
-        TeamMemberImpl teamMember =
-                team.stream().filter(tm -> teamMemberName.equals(tm.getName())).findFirst().orElseThrow(IllegalArgumentException::new);
-        setGradeOn(teamMember, criterion, newValue);
+        setGradeOn(findTeamMember(teamMemberName), criterion, newValue);
+    }
+
+    private TeamMemberImpl findTeamMember(String teamMemberName) {
+        return team.stream().filter(tm -> teamMemberName.equals(tm.getName())).findFirst().orElseThrow(IllegalArgumentException::new);
     }
 
     private void validateCriteria(Criteria criterion) {
@@ -71,8 +73,14 @@ class PTSImpl implements PerformanceTrackingSystem {
         validateCriteria(criteria);
         team.forEach(tm -> tm.deleteCriteria(criteria));
         this.criteria.remove(criteria);
-
         deleteCriteriaListeners.forEach(l -> l.accept(criteria));
+    }
+
+    @Override
+    public void deleteTeamMember(TeamMember teamMember) {
+        TeamMemberImpl tm = findTeamMember(teamMember.getName());
+        this.team.remove(tm);
+        deleteTeamMemberListeners.forEach(l -> l.accept(tm));
     }
 
     private void setGradeOn(TeamMemberImpl tm, Criteria newCriteria) {
@@ -95,6 +103,11 @@ class PTSImpl implements PerformanceTrackingSystem {
     @Override
     public void whenTeamMemberAdded(Consumer<TeamMember> listener) {
         addTeamMemberListeners.add(listener);
+    }
+
+    @Override
+    public void whenTeamMemberDeleted(Consumer<TeamMember> listener) {
+        deleteTeamMemberListeners.add(listener);
     }
 
 

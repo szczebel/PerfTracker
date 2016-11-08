@@ -13,6 +13,8 @@ public interface PerformanceTrackingSystem {
 
     void addTeamMember(String newTeamMember);
 
+    void whenTeamMemberDeleted(Consumer<TeamMember> listener);
+
     int getMaxGrade(CriteriaType type);
 
     void updateScore(String teamMember, Criteria criteria, int newValue);
@@ -23,4 +25,6 @@ public interface PerformanceTrackingSystem {
     void whenTeamMemberAdded(Consumer<TeamMember> listener);
 
     void deleteCriteria(Criteria criteria);
+
+    void deleteTeamMember(TeamMember teamMember);
 }

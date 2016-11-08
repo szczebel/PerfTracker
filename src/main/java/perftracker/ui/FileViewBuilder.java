@@ -21,7 +21,7 @@ import static swingutils.layout.LayoutBuilders.flowLayout;
 @Component
 public class FileViewBuilder {
 
-    private static final String FILE_EXTENSION = ".pm-json";
+    private static final String FILE_EXTENSION = "pm-json";
     @Autowired
     private Persister persister;
     @Autowired
@@ -81,8 +81,8 @@ public class FileViewBuilder {
         if (APPROVE_OPTION == fileChooser.showSaveDialog(null)) {
             File selectedFile = fileChooser.getSelectedFile();
             try {
-                if(!selectedFile.getName().endsWith(FILE_EXTENSION))
-                    selectedFile = appendExtension(selectedFile, FILE_EXTENSION);
+                if(!selectedFile.getName().endsWith("."+FILE_EXTENSION))
+                    selectedFile = appendExtension(selectedFile, "."+FILE_EXTENSION);
                 persister.saveAs(selectedFile);
             } catch (IOException e) {
                 e.printStackTrace();

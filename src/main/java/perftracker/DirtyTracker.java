@@ -19,6 +19,7 @@ public class DirtyTracker {
         });
         system.whenCriteriaAdded(c -> setDirty(true));
         system.whenCriteriaDeleted(c -> setDirty(true));
+        system.whenTeamMemberDeleted(tm -> setDirty(true));
     }
 
     public void setDirty(boolean dirty) {

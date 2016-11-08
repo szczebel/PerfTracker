@@ -18,6 +18,8 @@ public class GraphView {
 
     @Autowired
     TeamMemberSelection teamMemberSelection;
+
+    @SuppressWarnings("unused")
     @PostConstruct
     void init() {
         teamMemberSelection.whenSelectionChanged(teamMember -> repaint());
@@ -40,6 +42,7 @@ public class GraphView {
             repaint();
             t.whenScoreChanged((c, i) -> repaint());
         });
+        system.whenTeamMemberDeleted(t -> repaint());
         system.getTeam().forEach(t -> t.whenScoreChanged((c, i) -> repaint()));
     }
 
