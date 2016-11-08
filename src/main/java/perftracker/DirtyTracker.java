@@ -12,10 +12,10 @@ public class DirtyTracker {
 
     public void bindTo(PerformanceTrackingSystem system) {
         setDirty(false);
-        system.getTeam().forEach(tm -> tm.whenGradeChanged((s,i) -> setDirty(true)));
+        system.getTeam().forEach(tm -> tm.whenScoreChanged((s, i) -> setDirty(true)));
         system.whenTeamMemberAdded(tm -> {
             setDirty(true);
-            tm.whenGradeChanged((s,i) -> setDirty(true));
+            tm.whenScoreChanged((s, i) -> setDirty(true));
         });
         system.whenCriteriaAdded(c -> setDirty(true));
     }

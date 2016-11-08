@@ -94,4 +94,5 @@ public class Persister {
     public void onCurrentFileChange(Consumer<File> listener) {
         this.listener = listener;
     }
+
 }

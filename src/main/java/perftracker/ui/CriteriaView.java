@@ -7,6 +7,7 @@ import perftracker.domain.CriteriaType;
 import perftracker.domain.PerformanceTrackingSystem;
 import swingutils.components.table.TableFactory;
 import swingutils.components.table.TablePanel;
+import swingutils.components.table.descriptor.ColumnAction;
 import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
@@ -27,19 +28,26 @@ public class CriteriaView {
 
     JComponent build() {
 
+        ColumnAction<Criteria> deleteAction = new ColumnAction<>(new ImageIcon(getClass().getResource("/delete.png")), "Delete this criteria", this::removeClicked);
         TablePanel<Criteria> tablePanel = TableFactory
                 .createTablePanel(
                         viewModel,
                         Columns.create(Criteria.class)
                                 .column("Name", String.class, Criteria::getName)
                                 .column("Type", CriteriaType.class, Criteria::getType)
-                                .column("Max score", Integer.class, Criteria::getMaxGrade)
+                                .column("Max score", Integer.class, Criteria::getMaxScore)
+//                                .column(deleteAction)//todo: uncomment once removeCriteria functionality is completed
                 );
         tablePanel.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         return borderLayout()
                 .south(buildAddNewCriterionPanel())
                 .center(tablePanel.getScrollPane())
                 .build();
+    }
+
+    void removeClicked(Criteria criteria) {
+        JOptionPane.showMessageDialog(null, "Will remove " + criteria.getName());
     }
 
     private JComponent buildAddNewCriterionPanel() {
@@ -51,7 +59,7 @@ public class CriteriaView {
                 textField,
                 label("Type:"),
                 typeSelector,
-                label("Max grade:"),
+                label("Max score:"),
                 new JSpinner(numberModel),
                 button("Add", () -> {
                     String trimmed = textField.getText().trim();

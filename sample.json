@@ -1,1 +1,124 @@
-{"criteria":[{"name":"Being nice to strangers","type":"SOFTSKILL","maxGrade":10},{"name":"Walking elderly through the street","type":"SOFTSKILL","maxGrade":10},{"name":"Brushing teeth","type":"SOFTSKILL","maxGrade":10},{"name":"Coding in Java","type":"HARDSKILL","maxGrade":10},{"name":"Coding in Python","type":"HARDSKILL","maxGrade":10},{"name":"Coding in Erlang","type":"HARDSKILL","maxGrade":10}],"team":[{"name":"John Rambo","grades":{"Coding in Java":4,"Coding in Python":8,"Coding in Erlang":5,"Being nice to strangers":6,"Brushing teeth":5,"Walking elderly through the street":1}},{"name":"Wayne Gretzky","grades":{"Coding in Java":5,"Coding in Python":5,"Coding in Erlang":9,"Being nice to strangers":5,"Brushing teeth":5,"Walking elderly through the street":9}},{"name":"Lucky Luke","grades":{"Coding in Java":2,"Coding in Python":5,"Coding in Erlang":5,"Being nice to strangers":5,"Brushing teeth":5,"Walking elderly through the street":5}},{"name":"Queen Elizabeth","grades":{"Coding in Java":5,"Coding in Python":5,"Coding in Erlang":5,"Being nice to strangers":5,"Brushing teeth":5,"Walking elderly through the street":1}},{"name":"Bruce Wayne","grades":{"Coding in Java":2,"Coding in Python":3,"Coding in Erlang":2,"Being nice to strangers":6,"Brushing teeth":7,"Walking elderly through the street":8}},{"name":"Mick Jagger","grades":{"Coding in Java":10,"Coding in Python":10,"Coding in Erlang":2,"Being nice to strangers":6,"Brushing teeth":10,"Walking elderly through the street":8}},{"name":"Harry Potter","grades":{"Coding in Java":1,"Coding in Python":2,"Coding in Erlang":1,"Being nice to strangers":2,"Brushing teeth":3,"Walking elderly through the street":5}},{"name":"Dirty Harry","grades":{"Coding in Java":5,"Coding in Python":5,"Coding in Erlang":5,"Being nice to strangers":5,"Brushing teeth":5,"Walking elderly through the street":5}}]}
+{
+  "criteria": [
+    {
+      "name": "Being nice to strangers",
+      "type": "SOFTSKILL",
+      "maxScore": 10
+    },
+    {
+      "name": "Walking elderly through the street",
+      "type": "SOFTSKILL",
+      "maxScore": 10
+    },
+    {
+      "name": "Brushing teeth",
+      "type": "SOFTSKILL",
+      "maxScore": 10
+    },
+    {
+      "name": "Coding in Java",
+      "type": "HARDSKILL",
+      "maxScore": 10
+    },
+    {
+      "name": "Coding in Python",
+      "type": "HARDSKILL",
+      "maxScore": 10
+    },
+    {
+      "name": "Coding in Erlang",
+      "type": "HARDSKILL",
+      "maxScore": 10
+    }
+  ],
+  "team": [
+    {
+      "name": "John Rambo",
+      "scores": {
+        "Coding in Java": 4,
+        "Coding in Python": 8,
+        "Coding in Erlang": 5,
+        "Being nice to strangers": 6,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 1
+      }
+    },
+    {
+      "name": "Wayne Gretzky",
+      "scores": {
+        "Coding in Java": 5,
+        "Coding in Python": 5,
+        "Coding in Erlang": 9,
+        "Being nice to strangers": 5,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 9
+      }
+    },
+    {
+      "name": "Lucky Luke",
+      "scores": {
+        "Coding in Java": 2,
+        "Coding in Python": 5,
+        "Coding in Erlang": 5,
+        "Being nice to strangers": 5,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 5
+      }
+    },
+    {
+      "name": "Queen Elizabeth",
+      "scores": {
+        "Coding in Java": 5,
+        "Coding in Python": 5,
+        "Coding in Erlang": 5,
+        "Being nice to strangers": 5,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 1
+      }
+    },
+    {
+      "name": "Bruce Wayne",
+      "scores": {
+        "Coding in Java": 2,
+        "Coding in Python": 3,
+        "Coding in Erlang": 2,
+        "Being nice to strangers": 6,
+        "Brushing teeth": 7,
+        "Walking elderly through the street": 8
+      }
+    },
+    {
+      "name": "Mick Jagger",
+      "scores": {
+        "Coding in Java": 10,
+        "Coding in Python": 10,
+        "Coding in Erlang": 2,
+        "Being nice to strangers": 6,
+        "Brushing teeth": 10,
+        "Walking elderly through the street": 8
+      }
+    },
+    {
+      "name": "Harry Potter",
+      "scores": {
+        "Coding in Java": 1,
+        "Coding in Python": 2,
+        "Coding in Erlang": 1,
+        "Being nice to strangers": 2,
+        "Brushing teeth": 3,
+        "Walking elderly through the street": 5
+      }
+    },
+    {
+      "name": "Dirty Harry",
+      "scores": {
+        "Coding in Java": 5,
+        "Coding in Python": 5,
+        "Coding in Erlang": 5,
+        "Being nice to strangers": 5,
+        "Brushing teeth": 5,
+        "Walking elderly through the street": 5
+      }
+    }
+  ]
+}

@@ -23,8 +23,8 @@ public class Serializer {
 
         for (PersistentTeamMember ptm : persistentPTS.team) {
             pts.addTeamMember(ptm.name);
-            for (Map.Entry<String, Integer> grade : ptm.grades.entrySet()) {
-                pts.updateGrade(ptm.name, persistentPTS.findCriteriaByName(grade.getKey()), grade.getValue());
+            for (Map.Entry<String, Integer> grade : ptm.scores.entrySet()) {
+                pts.updateScore(ptm.name, persistentPTS.findCriteriaByName(grade.getKey()), grade.getValue());
             }
         }
         return pts;
@@ -38,7 +38,7 @@ public class Serializer {
             PersistentTeamMember ptm = new PersistentTeamMember();
             ptm.name = tm.getName();
             persistentPTS.team.add(ptm);
-            tm.getGrades().forEach((crit, grade) -> ptm.grades.put(crit.getName(), grade));
+            tm.getScores().forEach((crit, grade) -> ptm.scores.put(crit.getName(), grade));
         });
         jackson.writeValue(file, persistentPTS);
     }
@@ -72,7 +72,7 @@ public class Serializer {
     @SuppressWarnings("unused")
     private static class PersistentTeamMember {
         String name;
-        Map<String, Integer> grades = new HashMap<>();
+        Map<String, Integer> scores = new HashMap<>();
 
         public String getName() {
             return name;
@@ -82,12 +82,12 @@ public class Serializer {
             this.name = name;
         }
 
-        public Map<String, Integer> getGrades() {
-            return grades;
+        public Map<String, Integer> getScores() {
+            return scores;
         }
 
-        public void setGrades(Map<String, Integer> grades) {
-            this.grades = grades;
+        public void setScores(Map<String, Integer> scores) {
+            this.scores = scores;
         }
     }
 }

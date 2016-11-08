@@ -26,7 +26,7 @@ class TeamMemberImpl implements TeamMember {
     }
 
     @Override
-    public Map<Criteria, Integer> getGrades() {
+    public Map<Criteria, Integer> getScores() {
         return Collections.unmodifiableMap(grades);
     }
 
@@ -36,15 +36,15 @@ class TeamMemberImpl implements TeamMember {
     }
 
     @Override
-    public int getTotalGrade(CriteriaType type) {
-        return getGrades().entrySet().stream()
+    public int getTotalScore(CriteriaType type) {
+        return getScores().entrySet().stream()
                 .filter(entry -> type == entry.getKey().getType())
                 .mapToInt(Map.Entry::getValue).sum();
 
     }
 
     @Override
-    public void whenGradeChanged(BiConsumer<Criteria, Integer> listener) {
+    public void whenScoreChanged(BiConsumer<Criteria, Integer> listener) {
         listeners.add(listener);
     }
     //todo: add stopWatching to fix memory leak

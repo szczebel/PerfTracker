@@ -68,17 +68,17 @@ class TeamMemberViewContainer {
         }
 
         @Override
-        public Map<Criteria, Integer> getGrades() {
+        public Map<Criteria, Integer> getScores() {
             return Collections.emptyMap();
         }
 
         @Override
-        public int getTotalGrade(CriteriaType type) {
+        public int getTotalScore(CriteriaType type) {
             return 0;
         }
 
         @Override
-        public void whenGradeChanged(BiConsumer<Criteria, Integer> listener) {
+        public void whenScoreChanged(BiConsumer<Criteria, Integer> listener) {
 
         }
     };

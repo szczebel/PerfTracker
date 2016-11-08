@@ -6,6 +6,7 @@ import perftracker.DirtyTracker;
 import perftracker.persistence.Persister;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import static swingutils.layout.LayoutBuilders.flowLayout;
 @Component
 public class FileViewBuilder {
 
+    private static final String FILE_EXTENSION = ".pm-json";
     @Autowired
     private Persister persister;
     @Autowired
@@ -27,11 +29,12 @@ public class FileViewBuilder {
     @Autowired
     private DirtyTracker dirtyTracker;
 
-    private JFileChooser fileChooser = new JFileChooser(".");//todo extension filter
+    private JFileChooser fileChooser = new JFileChooser(".");
     private JLabel filenamebox = label(" <none> ");
     private JLabel unsaved = label("");
 
     JComponent build() {
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Performance Matrix files", FILE_EXTENSION));
         filenamebox.setFont(filenamebox.getFont().deriveFont(Font.BOLD));
         persister.onCurrentFileChange(f -> filenamebox.setText(f.getName()));
         dirtyTracker.whenDirtyChanged(dirty -> unsaved.setText(dirty ? " (unsaved changes) " : ""));
@@ -78,12 +81,18 @@ public class FileViewBuilder {
         if (APPROVE_OPTION == fileChooser.showSaveDialog(null)) {
             File selectedFile = fileChooser.getSelectedFile();
             try {
+                if(!selectedFile.getName().endsWith(FILE_EXTENSION))
+                    selectedFile = appendExtension(selectedFile, FILE_EXTENSION);
                 persister.saveAs(selectedFile);
             } catch (IOException e) {
                 e.printStackTrace();
                 statusBar.accept("Save failed, check logs");
             }
         }
+    }
+
+    private File appendExtension(File file, String fileExtension) {
+        return new File(file.getAbsolutePath() + fileExtension);
     }
 
 }

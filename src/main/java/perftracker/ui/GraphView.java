@@ -37,9 +37,9 @@ public class GraphView {
         system.whenCriteriaAdded(c -> repaint());
         system.whenTeamMemberAdded(t -> {
             repaint();
-            t.whenGradeChanged((c, i) -> repaint());
+            t.whenScoreChanged((c, i) -> repaint());
         });
-        system.getTeam().forEach(t -> t.whenGradeChanged((c, i) -> repaint()));
+        system.getTeam().forEach(t -> t.whenScoreChanged((c, i) -> repaint()));
     }
 
     private void repaint() {
@@ -69,11 +69,11 @@ public class GraphView {
 
                 system.getTeam().forEach(tm -> {
                     int x = maxSoftskillGrade != 0 ?
-                            (tm.getTotalGrade(SOFTSKILL) * usableWidth) / maxSoftskillGrade
+                            (tm.getTotalScore(SOFTSKILL) * usableWidth) / maxSoftskillGrade
                             :
                             usableWidth / 2;
                     int y = maxHardskillGrade != 0 ?
-                            (tm.getTotalGrade(HARDSKILL) * usableHeight) / maxHardskillGrade
+                            (tm.getTotalScore(HARDSKILL) * usableHeight) / maxHardskillGrade
                             :
                             usableHeight / 2;
                     y = usableHeight - y;

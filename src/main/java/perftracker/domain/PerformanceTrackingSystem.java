@@ -15,7 +15,7 @@ public interface PerformanceTrackingSystem {
 
     int getMaxGrade(CriteriaType type);
 
-    void updateGrade(String teamMember, Criteria criteria, int newValue);
+    void updateScore(String teamMember, Criteria criteria, int newValue);
 
     void whenCriteriaAdded(Consumer<Criteria> listener);
 

@@ -51,17 +51,17 @@ class PTSImpl implements PerformanceTrackingSystem {
     }
 
     @Override
-    public void updateGrade(String teamMemberName, Criteria criterion, int newValue) {
+    public void updateScore(String teamMemberName, Criteria criterion, int newValue) {
         //noinspection SuspiciousMethodCalls
         if(!this.criteria.contains(criterion)) throw new IllegalArgumentException("Unknown criteria" + criterion.getName());
-        if(newValue<0 || newValue> criterion.getMaxGrade()) throw new IllegalArgumentException("Grade out of range");
+        if(newValue<0 || newValue> criterion.getMaxScore()) throw new IllegalArgumentException("Grade out of range");
         TeamMemberImpl teamMember =
                 team.stream().filter(tm -> teamMemberName.equals(tm.getName())).findFirst().orElseThrow(IllegalArgumentException::new);
         setGradeOn(teamMember, criterion, newValue);
     }
 
     private void setGradeOn(TeamMemberImpl tm, Criteria newCriteria) {
-        setGradeOn(tm, newCriteria, newCriteria.getMaxGrade()/2);
+        setGradeOn(tm, newCriteria, newCriteria.getMaxScore()/2);
     }
     private void setGradeOn(TeamMemberImpl tm, Criteria criteria, int value) {
         tm.setGrade(criteria, value);
@@ -80,7 +80,7 @@ class PTSImpl implements PerformanceTrackingSystem {
 
     @Override
     public int getMaxGrade(CriteriaType type) {
-        return getCriteria().stream().filter(isOfType(type)).mapToInt(Criteria::getMaxGrade).sum();
+        return getCriteria().stream().filter(isOfType(type)).mapToInt(Criteria::getMaxScore).sum();
     }
 
     private Predicate<Criteria> isOfType(CriteriaType type) {

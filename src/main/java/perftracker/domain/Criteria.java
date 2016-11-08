@@ -6,5 +6,5 @@ public interface Criteria {
 
     CriteriaType getType();
 
-    int getMaxGrade();
+    int getMaxScore();
 }

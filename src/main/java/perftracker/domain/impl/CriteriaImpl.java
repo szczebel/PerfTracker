@@ -7,14 +7,14 @@ class CriteriaImpl implements Criteria{
 
     private String name;
     private CriteriaType type;
-    private int maxGrade;
+    private int maxScore;
 
     CriteriaImpl() {}
 
-    CriteriaImpl(String key, CriteriaType type, int maxGrade) {
+    CriteriaImpl(String key, CriteriaType type, int maxScore) {
         this.name = key;
         this.type = type;
-        this.maxGrade = maxGrade;
+        this.maxScore = maxScore;
     }
 
     @Override
@@ -28,7 +28,7 @@ class CriteriaImpl implements Criteria{
     }
 
     @Override
-    public int getMaxGrade() {
-        return maxGrade;
+    public int getMaxScore() {
+        return maxScore;
     }
 }

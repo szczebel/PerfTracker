@@ -125,10 +125,10 @@ public class TeamView {
 
     private void addTeamMemberToViewModel(TeamMember tm) {
         addToList(viewModel, new Row(tm));
-        tm.whenGradeChanged((s, i) -> onGradeChanged(tm));
+        tm.whenScoreChanged((s, i) -> onScoreChanged(tm));
     }
 
-    private void onGradeChanged(TeamMember tm) {
+    private void onScoreChanged(TeamMember tm) {
         Row row = viewModel.stream().filter(r -> tm.getName().equals(r.getName())).findFirst().orElseThrow(IllegalArgumentException::new);
         setInList(viewModel, viewModel.indexOf(row), row);
     }
@@ -145,11 +145,11 @@ public class TeamView {
         }
 
         int getTotalHardskillGrade() {
-            return teamMember.getTotalGrade(HARDSKILL);
+            return teamMember.getTotalScore(HARDSKILL);
         }
 
         int getTotalSoftskillGrade() {
-            return teamMember.getTotalGrade(SOFTSKILL);
+            return teamMember.getTotalScore(SOFTSKILL);
         }
     }
 }

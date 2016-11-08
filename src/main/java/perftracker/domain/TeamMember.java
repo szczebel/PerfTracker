@@ -9,9 +9,9 @@ public interface TeamMember {
 
     String getName();
 
-    Map<Criteria, Integer> getGrades();
+    Map<Criteria, Integer> getScores();
 
-    int getTotalGrade(CriteriaType type);
+    int getTotalScore(CriteriaType type);
 
-    void whenGradeChanged(BiConsumer<Criteria, Integer> listener);
+    void whenScoreChanged(BiConsumer<Criteria, Integer> listener);
 }
