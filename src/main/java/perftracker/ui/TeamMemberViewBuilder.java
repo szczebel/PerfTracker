@@ -13,6 +13,7 @@ import swingutils.components.table.TablePanel;
 import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -24,11 +25,11 @@ public class TeamMemberViewBuilder {
     JComponent build(TeamMember teamMember, PerformanceTrackingSystem system) {
 
         EventList<Row> viewModel = eventList();
-        teamMember.getScores().forEach((critName, grade) -> addToList(viewModel, new Row(critName, grade)));
+        teamMember.getScores().forEach((criteria, grade) -> addToList(viewModel, new Row(criteria, grade)));
         teamMember.whenScoreChanged((criteria, newGrade) -> onScoreChange(viewModel, criteria, newGrade));
+        system.whenCriteriaDeleted(criteria -> onCriteriaDeleted(viewModel, criteria));
 
-        BiConsumer<Row, Integer> setter = (row, newValue) ->
-                system.updateScore(teamMember.getName(), row.criteria, newValue);
+        BiConsumer<Row, Integer> setter = (row, newValue) -> system.updateScore(teamMember.getName(), row.criteria, newValue);
         TablePanel<Row> tablePanel = TableFactory.createTablePanel(
                 viewModel,
                 Columns.create(Row.class)
@@ -37,6 +38,22 @@ public class TeamMemberViewBuilder {
                         .column("Score", Integer.class, Row::getScore, setter) //todo: red outline when out of range
         );
 
+        addFractionalHighlighter(viewModel, tablePanel);
+
+        return tablePanel.getScrollPane();
+    }
+
+    private void onCriteriaDeleted(EventList<Row> model, Criteria criteria) {
+        Iterator<Row> iterator = model.iterator();
+        while (iterator.hasNext()) {
+            Row row = iterator.next();
+            if(row.criteria == criteria) {
+                iterator.remove();
+            }
+        }
+    }
+
+    private void addFractionalHighlighter(EventList<Row> viewModel, TablePanel<Row> tablePanel) {
         tablePanel.getTable().addHighlighter(new FactorialPainterHighlighter(
                 new MattePainter(GUI.FACTORIAL_COLOR), 2,
                 modelRowIndex -> {
@@ -44,8 +61,6 @@ public class TeamMemberViewBuilder {
                     return row.score / (float) row.criteria.getMaxScore();
                 }
         ));
-
-        return tablePanel.getScrollPane();
     }
 
     private void onScoreChange(EventList<Row> viewModel, Criteria criteria, Integer newScore) {

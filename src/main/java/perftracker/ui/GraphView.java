@@ -35,6 +35,7 @@ public class GraphView {
         repaint();
 
         system.whenCriteriaAdded(c -> repaint());
+        system.whenCriteriaDeleted(c -> repaint());
         system.whenTeamMemberAdded(t -> {
             repaint();
             t.whenScoreChanged((c, i) -> repaint());

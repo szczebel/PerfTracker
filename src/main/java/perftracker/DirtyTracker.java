@@ -18,6 +18,7 @@ public class DirtyTracker {
             tm.whenScoreChanged((s, i) -> setDirty(true));
         });
         system.whenCriteriaAdded(c -> setDirty(true));
+        system.whenCriteriaDeleted(c -> setDirty(true));
     }
 
     public void setDirty(boolean dirty) {

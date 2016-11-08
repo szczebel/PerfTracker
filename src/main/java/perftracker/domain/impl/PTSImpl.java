@@ -16,6 +16,7 @@ class PTSImpl implements PerformanceTrackingSystem {
     List<CriteriaImpl> criteria = new ArrayList<>();
     private List<TeamMemberImpl> team = new ArrayList<>();
     private List<Consumer<Criteria>> addCriteriaListeners = new ArrayList<>();
+    private List<Consumer<Criteria>> deleteCriteriaListeners = new ArrayList<>();
     private List<Consumer<TeamMember>> addTeamMemberListeners = new ArrayList<>();
 
     @Override
@@ -37,8 +38,8 @@ class PTSImpl implements PerformanceTrackingSystem {
         if(findOptionalCriteria(name).isPresent()) throw new IllegalArgumentException(name + " already exists");
         CriteriaImpl newCriteria = new CriteriaImpl(name, type, maxGrade);
         criteria.add(newCriteria);
-        addCriteriaListeners.forEach(criteriaConsumer -> criteriaConsumer.accept(newCriteria));
         team.forEach(tm -> setGradeOn(tm, newCriteria));
+        addCriteriaListeners.forEach(criteriaConsumer -> criteriaConsumer.accept(newCriteria));
     }
 
     @Override
@@ -52,12 +53,26 @@ class PTSImpl implements PerformanceTrackingSystem {
 
     @Override
     public void updateScore(String teamMemberName, Criteria criterion, int newValue) {
-        //noinspection SuspiciousMethodCalls
-        if(!this.criteria.contains(criterion)) throw new IllegalArgumentException("Unknown criteria" + criterion.getName());
+        validateCriteria(criterion);
+
         if(newValue<0 || newValue> criterion.getMaxScore()) throw new IllegalArgumentException("Grade out of range");
         TeamMemberImpl teamMember =
                 team.stream().filter(tm -> teamMemberName.equals(tm.getName())).findFirst().orElseThrow(IllegalArgumentException::new);
         setGradeOn(teamMember, criterion, newValue);
+    }
+
+    private void validateCriteria(Criteria criterion) {
+        //noinspection SuspiciousMethodCalls
+        if(!this.criteria.contains(criterion)) throw new IllegalArgumentException("Unknown criteria" + criterion.getName());
+    }
+
+    @Override
+    public void deleteCriteria(Criteria criteria) {
+        validateCriteria(criteria);
+        team.forEach(tm -> tm.deleteCriteria(criteria));
+        this.criteria.remove(criteria);
+
+        deleteCriteriaListeners.forEach(l -> l.accept(criteria));
     }
 
     private void setGradeOn(TeamMemberImpl tm, Criteria newCriteria) {
@@ -70,6 +85,11 @@ class PTSImpl implements PerformanceTrackingSystem {
     @Override
     public void whenCriteriaAdded(Consumer<Criteria> listener) {
         addCriteriaListeners.add(listener);
+    }
+
+    @Override
+    public void whenCriteriaDeleted(Consumer<Criteria> listener) {
+        deleteCriteriaListeners.add(listener);
     }
 
     @Override

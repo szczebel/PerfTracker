@@ -36,7 +36,7 @@ public class CriteriaView {
                                 .column("Name", String.class, Criteria::getName)
                                 .column("Type", CriteriaType.class, Criteria::getType)
                                 .column("Max score", Integer.class, Criteria::getMaxScore)
-//                                .column(deleteAction)//todo: uncomment once removeCriteria functionality is completed
+                                .column(deleteAction)
                 );
         tablePanel.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -46,8 +46,8 @@ public class CriteriaView {
                 .build();
     }
 
-    void removeClicked(Criteria criteria) {
-        JOptionPane.showMessageDialog(null, "Will remove " + criteria.getName());
+    private void removeClicked(Criteria criteria) {
+        system.deleteCriteria(criteria);
     }
 
     private JComponent buildAddNewCriterionPanel() {
@@ -77,6 +77,7 @@ public class CriteriaView {
         clearEventList(viewModel);
         viewModel.addAll(system.getCriteria());
         system.whenCriteriaAdded(viewModel::add);
+        system.whenCriteriaDeleted(viewModel::remove);
     }
 
 }

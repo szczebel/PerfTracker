@@ -18,6 +18,9 @@ public interface PerformanceTrackingSystem {
     void updateScore(String teamMember, Criteria criteria, int newValue);
 
     void whenCriteriaAdded(Consumer<Criteria> listener);
+    void whenCriteriaDeleted(Consumer<Criteria> listener);
 
     void whenTeamMemberAdded(Consumer<TeamMember> listener);
+
+    void deleteCriteria(Criteria criteria);
 }

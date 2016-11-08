@@ -109,6 +109,7 @@ public class TeamView {
 
         system.getTeam().forEach(this::addTeamMemberToViewModel);
         system.whenTeamMemberAdded(this::addTeamMemberToViewModel);
+        system.whenCriteriaDeleted(c -> tablePanel.getTable().repaint());
     }
 
     private JComponent buildAddNewTeamMemberPanel() {
@@ -125,10 +126,10 @@ public class TeamView {
 
     private void addTeamMemberToViewModel(TeamMember tm) {
         addToList(viewModel, new Row(tm));
-        tm.whenScoreChanged((s, i) -> onScoreChanged(tm));
+        tm.whenScoreChanged((s, i) -> resetTeamMember(tm));
     }
 
-    private void onScoreChanged(TeamMember tm) {
+    private void resetTeamMember(TeamMember tm) {
         Row row = viewModel.stream().filter(r -> tm.getName().equals(r.getName())).findFirst().orElseThrow(IllegalArgumentException::new);
         setInList(viewModel, viewModel.indexOf(row), row);
     }

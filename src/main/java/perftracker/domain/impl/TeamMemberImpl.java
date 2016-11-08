@@ -48,4 +48,8 @@ class TeamMemberImpl implements TeamMember {
         listeners.add(listener);
     }
     //todo: add stopWatching to fix memory leak
+
+    void deleteCriteria(Criteria criteria) {
+        grades.remove(criteria);
+    }
 }
