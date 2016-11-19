@@ -10,13 +10,17 @@ import perftracker.domain.TeamMember;
 import swingutils.components.table.FactorialPainterHighlighter;
 import swingutils.components.table.TableFactory;
 import swingutils.components.table.TablePanel;
+import swingutils.components.table.descriptor.ColumnAction;
 import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
+import static perftracker.ui.Icons.MINUS;
+import static perftracker.ui.Icons.PLUS;
 import static swingutils.EventListHelper.*;
 
 @Component
@@ -30,16 +34,19 @@ public class TeamMemberViewBuilder {
         system.whenCriteriaDeleted(criteria -> onCriteriaDeleted(viewModel, criteria));
 
         BiConsumer<Row, Integer> setter = (row, newValue) -> system.updateScore(teamMember.getName(), row.criteria, newValue);
+        Consumer<Row> scoreUp = row -> system.updateScore(teamMember.getName(), row.criteria, row.score + 1);
+        Consumer<Row> scoreDown = row -> system.updateScore(teamMember.getName(), row.criteria, row.score - 1);
+
         TablePanel<Row> tablePanel = TableFactory.createTablePanel(
                 viewModel,
                 Columns.create(Row.class)
                         .column("Criteria", String.class, Row::getCriteriaName)
-                        .column("Type", CriteriaType.class, Row::getType)
                         .column("Score", Integer.class, Row::getScore, setter) //todo: red outline when out of range
+                        .column(new ColumnAction<>(PLUS.icon, "Increase", scoreUp))
+                        .column(new ColumnAction<>(MINUS.icon, "Decrease", scoreDown))
         );
 
         addFractionalHighlighter(viewModel, tablePanel);
-
         return tablePanel.getScrollPane();
     }
 
@@ -55,7 +62,7 @@ public class TeamMemberViewBuilder {
 
     private void addFractionalHighlighter(EventList<Row> viewModel, TablePanel<Row> tablePanel) {
         tablePanel.getTable().addHighlighter(new FactorialPainterHighlighter(
-                new MattePainter(GUI.FACTORIAL_COLOR), 2,
+                new MattePainter(GUI.FACTORIAL_COLOR), 1,
                 modelRowIndex -> {
                     Row row = viewModel.get(modelRowIndex);
                     return row.score / (float) row.criteria.getMaxScore();

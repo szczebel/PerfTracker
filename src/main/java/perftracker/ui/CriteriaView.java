@@ -13,6 +13,7 @@ import swingutils.components.table.descriptor.Columns;
 import javax.swing.*;
 import java.awt.*;
 
+import static perftracker.ui.Icons.DELETE;
 import static swingutils.EventListHelper.clearEventList;
 import static swingutils.EventListHelper.eventList;
 import static swingutils.components.ComponentFactory.button;
@@ -28,7 +29,7 @@ public class CriteriaView {
 
     JComponent build() {
 
-        ColumnAction<Criteria> deleteAction = new ColumnAction<>(new ImageIcon(getClass().getResource("/delete.png")), "Delete this criteria", this::deleteClicked);
+        ColumnAction<Criteria> deleteAction = new ColumnAction<>(DELETE.icon, "Delete this criteria", this::deleteClicked);
         TablePanel<Criteria> tablePanel = TableFactory
                 .createTablePanel(
                         viewModel,
