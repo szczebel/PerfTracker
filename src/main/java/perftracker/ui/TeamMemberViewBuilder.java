@@ -10,7 +10,6 @@ import perftracker.domain.TeamMember;
 import swingutils.components.table.FactorialPainterHighlighter;
 import swingutils.components.table.TableFactory;
 import swingutils.components.table.TablePanel;
-import swingutils.components.table.descriptor.ColumnAction;
 import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
@@ -42,9 +41,10 @@ public class TeamMemberViewBuilder {
                 Columns.create(Row.class)
                         .column("Criteria", String.class, Row::getCriteriaName)
                         .column("Score", Integer.class, Row::getScore, setter) //todo: red outline when out of range
-                        .column(new ColumnAction<>(PLUS.icon, "Increase", scoreUp))
-                        .column(new ColumnAction<>(MINUS.icon, "Decrease", scoreDown))
+                        .actionable(PLUS.icon, "Increase", scoreUp)
+                        .actionable(MINUS.icon, "Decrease", scoreDown)
         );
+        tablePanel.getTable().packAll();
 
         addFractionalHighlighter(viewModel, tablePanel);
         return tablePanel.getScrollPane();

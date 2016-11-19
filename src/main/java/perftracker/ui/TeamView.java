@@ -19,6 +19,7 @@ import java.util.function.Function;
 
 import static perftracker.domain.CriteriaType.HARDSKILL;
 import static perftracker.domain.CriteriaType.SOFTSKILL;
+import static perftracker.ui.Icons.DELETE;
 import static swingutils.EventListHelper.*;
 import static swingutils.components.ComponentFactory.button;
 import static swingutils.components.ComponentFactory.label;
@@ -72,10 +73,6 @@ public class TeamView {
     }
 
     private void createTeamTable() {
-        ColumnAction<Row> deleteAction = new ColumnAction<>(
-                new ImageIcon(getClass().getResource("/delete.png")),
-                "Delete this team member",
-                this::deleteClicked);
 
         tablePanel = TableFactory
                 .createTablePanel(
@@ -84,7 +81,7 @@ public class TeamView {
                                 .column("Name", String.class, Row::getName)
                                 .column(HARDSKILL + "s total score", Integer.class, Row::getTotalHardskillGrade)
                                 .column(SOFTSKILL + "s total score", Integer.class, Row::getTotalSoftskillGrade)
-                                .column(deleteAction)
+                                .actionable(DELETE.icon, "Delete this team member", this::deleteClicked)
 
                 );
         tablePanel.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -118,8 +115,9 @@ public class TeamView {
     void bindTo(PerformanceTrackingSystem system) {
         this.system = system;
         clearEventList(viewModel);
-
         system.getTeam().forEach(this::addTeamMemberToViewModel);
+        tablePanel.getTable().packAll();
+
         system.whenTeamMemberAdded(this::addTeamMemberToViewModel);
         system.whenTeamMemberDeleted(this::removeTeamMemberFromViewModel);
         system.whenCriteriaDeleted(c -> tablePanel.getTable().repaint());

@@ -7,7 +7,6 @@ import perftracker.domain.CriteriaType;
 import perftracker.domain.PerformanceTrackingSystem;
 import swingutils.components.table.TableFactory;
 import swingutils.components.table.TablePanel;
-import swingutils.components.table.descriptor.ColumnAction;
 import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
@@ -26,18 +25,16 @@ public class CriteriaView {
 
     private PerformanceTrackingSystem system;
     private EventList<Criteria> viewModel = eventList();
+    private TablePanel<Criteria> tablePanel;
 
     JComponent build() {
-
-        ColumnAction<Criteria> deleteAction = new ColumnAction<>(DELETE.icon, "Delete this criteria", this::deleteClicked);
-        TablePanel<Criteria> tablePanel = TableFactory
-                .createTablePanel(
+        tablePanel = TableFactory.createTablePanel(
                         viewModel,
                         Columns.create(Criteria.class)
                                 .column("Name", String.class, Criteria::getName)
                                 .column("Type", CriteriaType.class, Criteria::getType)
                                 .column("Max score", Integer.class, Criteria::getMaxScore)
-                                .column(deleteAction)
+                                .actionable(DELETE.icon, "Delete this criteria", this::deleteClicked)
                 );
         tablePanel.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -77,6 +74,7 @@ public class CriteriaView {
         this.system = system;
         clearEventList(viewModel);
         viewModel.addAll(system.getCriteria());
+        tablePanel.getTable().packAll();
         system.whenCriteriaAdded(viewModel::add);
         system.whenCriteriaDeleted(viewModel::remove);
     }
