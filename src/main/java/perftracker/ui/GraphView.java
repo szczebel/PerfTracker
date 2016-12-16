@@ -68,8 +68,8 @@ public class GraphView {
 
                 int maxHardskillGrade = system.getMaxGrade(HARDSKILL);
                 int maxSoftskillGrade = system.getMaxGrade(SOFTSKILL);
-                int usableWidth = getWidth() - AXIS_MARGIN;
-                int usableHeight = getHeight() - AXIS_MARGIN;
+                int usableWidth = getWidth() - 2*AXIS_MARGIN;
+                int usableHeight = getHeight() - 2*AXIS_MARGIN;
 
                 system.getTeam().forEach(tm -> {
                     int x = maxSoftskillGrade != 0 ?
@@ -80,7 +80,7 @@ public class GraphView {
                             (tm.getTotalScore(HARDSKILL) * usableHeight) / maxHardskillGrade
                             :
                             usableHeight / 2;
-                    y = usableHeight - y;
+                    y = usableHeight - y + AXIS_MARGIN;
                     x = x + AXIS_MARGIN;
 
                     boolean selected = teamMemberSelection.get() == tm;
