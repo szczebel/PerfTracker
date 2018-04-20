@@ -13,7 +13,6 @@ import swingutils.components.table.TablePanel;
 import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -30,7 +29,7 @@ public class TeamMemberViewBuilder {
         EventList<Row> viewModel = eventList();
         teamMember.getScores().forEach((criteria, grade) -> addToList(viewModel, new Row(criteria, grade)));
         teamMember.whenScoreChanged((criteria, newGrade) -> onScoreChange(viewModel, criteria, newGrade));
-        system.whenCriteriaDeleted(criteria -> onCriteriaDeleted(viewModel, criteria));
+        system.whenCriteriaDeleted(criteria -> viewModel.removeIf(row -> row.criteria == criteria));
 
         BiConsumer<Row, Integer> setter = (row, newValue) -> system.updateScore(teamMember.getName(), row.criteria, newValue);
         Consumer<Row> scoreUp = row -> system.updateScore(teamMember.getName(), row.criteria, row.score + 1);
@@ -41,23 +40,13 @@ public class TeamMemberViewBuilder {
                 Columns.create(Row.class)
                         .column("Criteria", String.class, Row::getCriteriaName)
                         .column("Score", Integer.class, Row::getScore, setter) //todo: red outline when out of range
-                        .actionable(PLUS.icon, "Increase", scoreUp)
-                        .actionable(MINUS.icon, "Decrease", scoreDown)
+                        .actionable("Increase", PLUS.icon, scoreUp)
+                        .actionable("Decrease", MINUS.icon, scoreDown)
         );
         tablePanel.getTable().packAll();
 
         addFractionalHighlighter(viewModel, tablePanel);
         return tablePanel.getScrollPane();
-    }
-
-    private void onCriteriaDeleted(EventList<Row> model, Criteria criteria) {
-        Iterator<Row> iterator = model.iterator();
-        while (iterator.hasNext()) {
-            Row row = iterator.next();
-            if(row.criteria == criteria) {
-                iterator.remove();
-            }
-        }
     }
 
     private void addFractionalHighlighter(EventList<Row> viewModel, TablePanel<Row> tablePanel) {

@@ -81,7 +81,7 @@ public class TeamView {
                                 .column("Name", String.class, Row::getName)
                                 .column(HARDSKILL + "s total score", Integer.class, Row::getTotalHardskillGrade)
                                 .column(SOFTSKILL + "s total score", Integer.class, Row::getTotalSoftskillGrade)
-                                .actionable(DELETE.icon, "Delete this team member", this::deleteClicked)
+                                .actionable("Delete this team member", DELETE.icon, this::deleteClicked)
 
                 );
         tablePanel.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

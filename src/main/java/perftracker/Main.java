@@ -1,50 +1,47 @@
 package perftracker;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.annotation.Bean;
 import perftracker.domain.PerformanceTrackingSystem;
 import perftracker.domain.impl.Factory;
 import perftracker.persistence.Persister;
 import perftracker.ui.Binder;
 import perftracker.ui.GUI;
-import swingutils.components.ComponentFactory;
+import swingutils.spring.application.SwingApplication;
+import swingutils.spring.application.SwingApplicationBootstrap;
+import swingutils.spring.application.SwingEntryPoint;
 
-import javax.annotation.PostConstruct;
-import javax.swing.*;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
 
-@ComponentScan(basePackages = "perftracker")
-@Component
+@SpringBootApplication
+@SwingApplication
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException, InvocationTargetException {
-        ComponentFactory.initLAF();
-        SwingUtilities.invokeAndWait(() -> new AnnotationConfigApplicationContext(Main.class));
+    public static void main(String[] args) throws InterruptedException, InvocationTargetException, IOException {
+        SwingApplicationBootstrap.beforeSpring("/icon.png");
+        new SpringApplicationBuilder(Main.class).headless(false).run(args);
+
     }
 
-    @Autowired
-    private Persister persister;
-    @Autowired
-    private Binder binder;
-    @Autowired
-    private GUI gui;
-    @Autowired
-    private Factory domainFactory;
-    @Autowired
-    private Consumer<String> statusBar;
+    @Bean
+    SwingEntryPoint startInEdt(Persister persister,
+                               Binder binder,
+                               GUI gui,
+                               Factory domainFactory,
+                               Consumer<String> statusBar) {
+        return () -> {
+            Thread.setDefaultUncaughtExceptionHandler((t, e) -> statusBar.accept(e.getMessage()));
+            gui.show();
+            PerformanceTrackingSystem initial = domainFactory.createEmptySystem();
+            persister.setCurrent(initial);
+            binder.bindAllTo(initial);
+            persister.loadRecentProject();
 
-    @SuppressWarnings("unused")
-    @PostConstruct
-    void startup() {
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> statusBar.accept(e.getMessage()));
-        gui.show();
-        PerformanceTrackingSystem initial = domainFactory.createEmptySystem();
-        persister.setCurrent(initial);
-        binder.bindAllTo(initial);
-        persister.loadRecentProject();
+        };
     }
+
 }

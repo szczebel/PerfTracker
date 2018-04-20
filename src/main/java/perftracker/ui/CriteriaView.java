@@ -34,7 +34,7 @@ public class CriteriaView {
                                 .column("Name", String.class, Criteria::getName)
                                 .column("Type", CriteriaType.class, Criteria::getType)
                                 .column("Max score", Integer.class, Criteria::getMaxScore)
-                                .actionable(DELETE.icon, "Delete this criteria", this::deleteClicked)
+                                .actionable("Delete this criteria", DELETE.icon, this::deleteClicked)
                 );
         tablePanel.getTable().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
