@@ -51,7 +51,7 @@ public class TeamMemberViewBuilder {
 
     private void addFractionalHighlighter(EventList<Row> viewModel, TablePanel<Row> tablePanel) {
         tablePanel.getTable().addHighlighter(new FactorialPainterHighlighter(
-                new MattePainter(GUI.FACTORIAL_COLOR), 1,
+                new MattePainter(GuiConfig.FACTORIAL_COLOR), 1,
                 modelRowIndex -> {
                     Row row = viewModel.get(modelRowIndex);
                     return row.score / (float) row.criteria.getMaxScore();

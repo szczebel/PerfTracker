@@ -14,8 +14,7 @@ import static swingutils.components.ComponentFactory.*;
 import static swingutils.layout.LayoutBuilders.borderLayout;
 
 @Component
-public class GUI {
-
+public class GuiBuilder {
 
     private static final String TEAM = "Team";
     private static final String COMPARISON_GRAPH = "Comparison graph";
@@ -34,11 +33,11 @@ public class GUI {
     @Autowired
     StatusBar statusBar;
     @Autowired
+    LogsPresenter logsPresenter;
+    @Autowired
     Close close;
 
-    static final Color FACTORIAL_COLOR = new Color(128,255,128,128);
-
-    public void show() {
+    RichFrame build() {
         RichFrame f = new RichFrame();
         f.setIconImage(new ImageIcon((getClass().getResource("/icon.png"))).getImage());
         f.setTitle("Performance Matrix");
@@ -46,30 +45,18 @@ public class GUI {
         f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         f.addWindowListener(close);
 
-
         f.add(borderLayout()
                 .north(fileViewBuilder.build())
                 .center(createCenter())
-                .south(statusBar.getComponent())
+                .south(borderLayout()
+                        .center(statusBar.getComponent())
+                        .east(button("Logs", ()->logsPresenter.showLogs(f)))
+                        .build()
+                )
                 .build());
         f.setVisible(true);
+        return f;
     }
-
-//    private JComponent createCenter() {
-//
-//        return splitPane(HORIZONTAL_SPLIT,
-//                borderLayout()
-//                        .north(decorate(collapsible(criteriaView.build(), CRITERIA)).withEmptyBorder(0,4,4,0).get())
-//                        .center(
-//                                splitPane(VERTICAL_SPLIT,
-//                                        decorate(teamView.getComponent()).withGradientHeader(TEAM).withEmptyBorder(4, 4, 0, 0).minSize(200, 300).get(),
-//                                        decorate(detailsContainer.getComponent()).withEmptyBorder(4, 4, 4, 0).prefSize(200, 200).get()
-//                                )
-//                        ).build()
-//                ,
-//                decorate(graphView.getComponent()).withGradientHeader(COMPARISON_GRAPH).withEmptyBorder(0, 4, 4, 4).get()
-//        );
-//    }
 
     private JComponent createCenter() {
 

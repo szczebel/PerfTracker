@@ -8,7 +8,6 @@ import perftracker.domain.TeamMember;
 import swingutils.components.table.FactorialPainterHighlighter;
 import swingutils.components.table.TableFactory;
 import swingutils.components.table.TablePanel;
-import swingutils.components.table.descriptor.ColumnAction;
 import swingutils.components.table.descriptor.Columns;
 
 import javax.swing.*;
@@ -95,7 +94,7 @@ public class TeamView {
     }
 
     private FactorialPainterHighlighter factorial(int column, Function<Integer, Float> factorFunction) {
-        return new FactorialPainterHighlighter(new MattePainter(GUI.FACTORIAL_COLOR), column, factorFunction);
+        return new FactorialPainterHighlighter(new MattePainter(GuiConfig.FACTORIAL_COLOR), column, factorFunction);
     }
 
     private Function<Integer, Float> softskillScorePercentage() {
