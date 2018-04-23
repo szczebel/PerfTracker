@@ -6,8 +6,7 @@ import perftracker.domain.PerformanceTrackingSystem;
 import perftracker.domain.impl.Factory;
 import perftracker.persistence.Persister;
 import swingutils.SysoutInterceptor;
-import swingutils.components.console.RollingConsole;
-import swingutils.frame.RichFrame;
+import swingutils.spring.application.BeforeEdtInitializer;
 import swingutils.spring.application.SwingEntryPoint;
 
 import java.awt.*;
@@ -18,35 +17,61 @@ public class GuiConfig {
     static final Color FACTORIAL_COLOR = new Color(128, 255, 128, 128);
 
     @Bean
-    RollingConsole logs(SysoutInterceptor sysoutInterceptor) {
-        RollingConsole rollingConsole = new RollingConsole(256);
-        sysoutInterceptor.registerSwingConsumer(rollingConsole::append);
-        return rollingConsole;
-    }
-
-    //todo: when this method is moved below wireThingsUp, NPE is thrown
-    @Bean
-    RichFrame mainFrame(GuiBuilder guiBuilder) {
-        return guiBuilder.build();
+    LogsPresenter logsPresenter(SysoutInterceptor sysoutInterceptor) {
+        return new LogsPresenter(sysoutInterceptor);
     }
 
     @Bean
-    Object wireThingsUp(Persister persister,
-                        Binder binder,
-                        Factory domainFactory,
-                        Consumer<String> statusBar) {
+    BeforeEdtInitializer nonEdtInitializer(
+            Persister persister,
+            Binder binder,
+            Factory domainFactory,
+            Consumer<String> statusBar,
+            MainFrame mainFrame
+    ) {
+        return () -> initBeforeEdt(persister, binder, domainFactory, statusBar, mainFrame);
+    }
+
+    @Bean
+    SwingEntryPoint edtInitializer(Persister persister, MainFrame mainFrame) {
+        return () -> initInEdt(persister, mainFrame);
+    }
+
+    private void initBeforeEdt(Persister persister, Binder binder, Factory domainFactory, Consumer<String> statusBar, MainFrame mainFrame) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> statusBar.accept(e.getMessage()));
+        mainFrame.build();
+
         PerformanceTrackingSystem initial = domainFactory.createEmptySystem();
         persister.setCurrent(initial);
         binder.bindAllTo(initial);
-        return null;
     }
 
-    @Bean
-    SwingEntryPoint showAndLoadRecent(RichFrame mainFrame, Persister persister) {
-        return () -> {
-            mainFrame.setVisible(true);
-            persister.loadRecentProject();
-        };
+    private void initInEdt(Persister persister, MainFrame mainFrame) {
+        mainFrame.setVisible(true);
+        persister.loadRecentProject();//todo: I/O in background
     }
+//
+//    @Component
+//    static class NonEdtInitializer {
+//        @Autowired
+//        Persister persister;
+//        @Autowired
+//        Binder binder;
+//        @Autowired
+//        Factory domainFactory;
+//        @Autowired
+//        Consumer<String> statusBar;
+//        @Autowired
+//        MainFrame mainFrame;
+//
+//        @PostConstruct
+//        void init() {
+//            Thread.setDefaultUncaughtExceptionHandler((t, e) -> statusBar.accept(e.getMessage()));
+//            mainFrame.build();
+//
+//            PerformanceTrackingSystem initial = domainFactory.createEmptySystem();
+//            persister.setCurrent(initial);
+//            binder.bindAllTo(initial);
+//        }
+//    }
 }

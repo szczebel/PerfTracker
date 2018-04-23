@@ -1,7 +1,7 @@
 package perftracker.ui;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import swingutils.SysoutInterceptor;
 import swingutils.components.console.RollingConsole;
 import swingutils.frame.RichFrame;
 
@@ -9,11 +9,13 @@ import javax.swing.*;
 
 import static swingutils.components.ComponentFactory.decorate;
 
-@Component
 public class LogsPresenter {
 
-    @Autowired
-    RollingConsole logs;
+    private RollingConsole logs = new RollingConsole(256);
+
+    LogsPresenter(SysoutInterceptor sysoutInterceptor) {
+        sysoutInterceptor.registerSwingConsumer(logs::append);
+    }
 
     void showLogs(RichFrame parent) {
         parent.getOverlay().showAndLock(createDialog(parent.getOverlay()::hideAndUnlock));
