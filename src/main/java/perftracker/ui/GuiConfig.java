@@ -50,28 +50,4 @@ public class GuiConfig {
         mainFrame.setVisible(true);
         persister.loadRecentProject();//todo: I/O in background
     }
-//
-//    @Component
-//    static class NonEdtInitializer {
-//        @Autowired
-//        Persister persister;
-//        @Autowired
-//        Binder binder;
-//        @Autowired
-//        Factory domainFactory;
-//        @Autowired
-//        Consumer<String> statusBar;
-//        @Autowired
-//        MainFrame mainFrame;
-//
-//        @PostConstruct
-//        void init() {
-//            Thread.setDefaultUncaughtExceptionHandler((t, e) -> statusBar.accept(e.getMessage()));
-//            mainFrame.build();
-//
-//            PerformanceTrackingSystem initial = domainFactory.createEmptySystem();
-//            persister.setCurrent(initial);
-//            binder.bindAllTo(initial);
-//        }
-//    }
 }
